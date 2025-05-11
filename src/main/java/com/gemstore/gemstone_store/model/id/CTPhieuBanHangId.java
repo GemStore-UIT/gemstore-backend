@@ -1,6 +1,7 @@
 package com.gemstore.gemstone_store.model.id;
 
 import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.io.Serializable;

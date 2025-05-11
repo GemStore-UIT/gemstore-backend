@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface CTPhieuDichVuService {
     List<CTPhieuDichVu> getAll();
     Optional<CTPhieuDichVu> getById(CTPhieuDichVuId id);
-    CTPhieuDichVu save(CTPhieuDichVu ct);
+    CTPhieuDichVu save(CTPhieuDichVu ct) throws Exception;
     void delete(CTPhieuDichVuId id);
 }

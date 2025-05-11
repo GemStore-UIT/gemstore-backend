@@ -3,20 +3,28 @@ package com.gemstore.gemstone_store.controller;
 import com.gemstore.gemstone_store.model.CTPhieuDichVu;
 import com.gemstore.gemstone_store.model.id.CTPhieuDichVuId;
 import com.gemstore.gemstone_store.service.CTPhieuDichVuService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/ctphieudichvu")
+@Tag(name = "Chi tiết phiếu dịch vụ", description = "CRUD chi tiết phiếu dịch vụ")
 public class CTPhieuDichVuController {
 
     @Autowired
     private CTPhieuDichVuService service;
 
+    @Operation(summary = "Lấy tất cả chi tiết phiếu dịch vụ")
     @GetMapping
     public ResponseEntity<?> getAll() {
         List<CTPhieuDichVu> list = service.getAll();
@@ -26,6 +34,7 @@ public class CTPhieuDichVuController {
         return ResponseEntity.ok(list);
     }
 
+    @Operation(summary = "Lấy chi tiết phiếu dịch vụ theo mã")
     @GetMapping("/{soPhieuDV}/{maLDV}")
     public ResponseEntity<?> getById(@PathVariable String soPhieuDV, @PathVariable String maLDV) {
         CTPhieuDichVuId id = new CTPhieuDichVuId(soPhieuDV, maLDV);
@@ -35,11 +44,26 @@ public class CTPhieuDichVuController {
                         .body("Không tìm thấy chi tiết phiếu dịch vụ."));
     }
 
+    @Operation(summary = "Cập nhật chi tiết phiếu dịch vụ")
     @PostMapping
-    public ResponseEntity<?> createOrUpdate(@RequestBody CTPhieuDichVu ct) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(ct));
+    public ResponseEntity<?> createOrUpdate(@Valid @RequestBody CTPhieuDichVu ct, BindingResult result) {
+        if (result.hasErrors()) {
+            String errors = result.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.joining(", "));
+            return ResponseEntity.badRequest().body("Lỗi: " + errors);
+        }
+        try {
+            var saved = service.save(ct);
+            return ResponseEntity.status(
+                    ct.getId() == null ? HttpStatus.CREATED : HttpStatus.OK
+            ).body(saved);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Lỗi: " + e.getMessage());
+        }
     }
 
+    @Operation(summary = "Xóa chi tiết phiếu dịch vụ")
     @DeleteMapping("/{soPhieuDV}/{maLDV}")
     public ResponseEntity<?> delete(@PathVariable String soPhieuDV, @PathVariable String maLDV) {
         CTPhieuDichVuId id = new CTPhieuDichVuId(soPhieuDV, maLDV);

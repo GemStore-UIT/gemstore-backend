@@ -6,6 +6,7 @@ import com.gemstore.gemstone_store.service.PhieuMuaHangService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +28,9 @@ public class PhieuMuaHangServiceImpl implements PhieuMuaHangService {
 
     @Override
     public PhieuMuaHang save(PhieuMuaHang pmh) {
+        if (!repo.existsById(pmh.getSoPhieuMH())) {
+            pmh.setNgayLap(LocalDateTime.now());
+        }
         return repo.save(pmh);
     }
 
