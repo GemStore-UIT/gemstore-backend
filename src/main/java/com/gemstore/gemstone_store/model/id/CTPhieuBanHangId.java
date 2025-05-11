@@ -11,10 +11,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CTPhieuBanHangId implements Serializable {
-
-    @NotNull
     private String maSanPham;
-
-    @NotNull
     private String soPhieuBH;
 }

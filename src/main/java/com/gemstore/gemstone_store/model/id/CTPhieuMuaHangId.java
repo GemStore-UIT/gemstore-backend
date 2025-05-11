@@ -13,10 +13,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CTPhieuMuaHangId implements Serializable {
-
-    @NotNull
     private String maSanPham;
-
-    @NotNull
     private String soPhieuMH;
 }
