@@ -1,22 +1,31 @@
 package com.gemstore.gemstone_store.controller;
 
 import com.gemstore.gemstone_store.model.CTPhieuBanHang;
+import com.gemstore.gemstone_store.model.CTPhieuMuaHang;
 import com.gemstore.gemstone_store.model.id.CTPhieuBanHangId;
 import com.gemstore.gemstone_store.service.CTPhieuBanHangService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.*;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/ctphieubanhang")
+@Tag(name = "Chi tiết phiếu bán hàng", description = "CRUD chi tiết phiếu bán hàng")
 public class CTPhieuBanHangController {
 
     @Autowired
     private CTPhieuBanHangService service;
 
+    @Operation(summary = "Lấy tất cả chi tiết phiếu bán hàng")
     @GetMapping
     public ResponseEntity<?> getAll() {
         List<CTPhieuBanHang> list = service.getAll();
@@ -26,6 +35,7 @@ public class CTPhieuBanHangController {
         return ResponseEntity.ok(list);
     }
 
+    @Operation(summary = "Lấy chi tiết phiếu bán hàng theo mã")
     @GetMapping("/{maSP}/{soPhieu}")
     public ResponseEntity<?> getById(@PathVariable String maSP, @PathVariable String soPhieu) {
         CTPhieuBanHangId id = new CTPhieuBanHangId(maSP, soPhieu);
@@ -35,11 +45,22 @@ public class CTPhieuBanHangController {
                         .body("Không tìm thấy chi tiết phiếu bán hàng."));
     }
 
+    @Operation(summary = "Tạo hoặc cập nhật chi tiết phiếu bán hàng")
     @PostMapping
-    public ResponseEntity<?> createOrUpdate(@RequestBody CTPhieuBanHang ct) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(ct));
+    public ResponseEntity<?> createOrUpdate(@Valid @RequestBody CTPhieuBanHang ct, BindingResult result) {
+        if (result.hasErrors()) {
+            String errors = result.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.joining(", "));
+            return ResponseEntity.badRequest().body("Lỗi: " + errors);
+        }
+        CTPhieuBanHang saved = service.save(ct);
+        return ResponseEntity.status(
+                ct.getId() == null ? HttpStatus.CREATED : HttpStatus.OK
+        ).body(saved);
     }
 
+    @Operation(summary = "Xóa chi tiết phiếu bán hàng theo mã")
     @DeleteMapping("/{maSP}/{soPhieu}")
     public ResponseEntity<?> delete(@PathVariable String maSP, @PathVariable String soPhieu) {
         CTPhieuBanHangId id = new CTPhieuBanHangId(maSP, soPhieu);

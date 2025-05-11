@@ -6,6 +6,7 @@ import com.gemstore.gemstone_store.service.PhieuBanHangService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +28,9 @@ public class PhieuBanHangServiceImpl implements PhieuBanHangService {
 
     @Override
     public PhieuBanHang save(PhieuBanHang pbh) {
+        if (!repo.existsById(pbh.getSoPhieuBH())) {
+            pbh.setNgayLap(LocalDateTime.now());
+        }
         return repo.save(pbh);
     }
 
