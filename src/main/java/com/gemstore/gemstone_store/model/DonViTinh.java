@@ -1,6 +1,7 @@
 package com.gemstore.gemstone_store.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 @Entity
@@ -12,9 +13,12 @@ public class DonViTinh {
 
     @Id
     @Column(name = "MaDonVi", length = 20, nullable = false)
+    @NotNull
+    @NotBlank(message = "Mã đơn vị không được để trống")
     private String maDonVi;
 
     @Column(name = "TenDonVi", length = 30)
+    @NotBlank(message = "Tên đơn vị không được để trống")
     private String tenDonVi;
 
 }
