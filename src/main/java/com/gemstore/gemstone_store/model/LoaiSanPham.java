@@ -23,12 +23,11 @@ public class LoaiSanPham {
 
     @ManyToOne
     @JoinColumn(name = "DonViTinh", referencedColumnName = "MaDonVi", nullable = false)
-    @NotNull
-    @NotBlank(message = "Đơn vị tính không được để trống")
+    @NotNull(message = "Đơn vị tính không được để trống")
     private DonViTinh donViTinh;
 
     @Column(name = "LoiNhuan")
-    @NotBlank(message = "Lợi nhuận không được để trống")
+    @Min(value = 0, message = "Lợi nhuận phải lớn hơn 0")
     private float loiNhuan;
 
 }
