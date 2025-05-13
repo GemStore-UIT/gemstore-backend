@@ -22,7 +22,6 @@ public class LoaiDichVu {
     private String tenLDV;
 
     @Column(name = "DonGia")
-    @NotBlank(message = "Đơn giá không được để trống")
     @Min(value = 0, message = "Đơn giá phải lớn hơn hoặc bằng 0")
     private int donGia;
 

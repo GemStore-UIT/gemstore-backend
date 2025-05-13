@@ -24,8 +24,7 @@ public class PhieuMuaHang {
     private LocalDateTime ngayLap;
 
     @ManyToOne
-    @NotNull
-    @NotBlank(message = "Nhà cung cấp không được để trống")
+    @NotNull(message = "Nhà cung cấp không được để trống")
     @JoinColumn(name = "MaNCC", nullable = false)
     private NhaCungCap nhaCungCap;
 }

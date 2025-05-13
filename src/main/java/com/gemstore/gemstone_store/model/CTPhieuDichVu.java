@@ -33,11 +33,10 @@ public class CTPhieuDichVu {
     private LoaiDichVu loaiDichVu;
 
     @Column(name = "DonGia")
-    @NotBlank(message = "Đơn giá không được để trống")
+    @Min(value = 1, message = "Đơn giá phải lớn hơn 0")
     private int donGia;
 
     @Column(name = "SoLuong")
-    @NotBlank(message = "Số lượng không được để trống")
     @Min(value = 1, message = "Số lượng phải lớn hơn 0")
     private int soLuong;
 
@@ -46,7 +45,6 @@ public class CTPhieuDichVu {
     private int thanhTien;
 
     @Column(name = "TraTruoc")
-    @NotBlank(message = "Tiền trả trước không được để trống")
     @Min(value = 0)
     private int traTruoc;
 
