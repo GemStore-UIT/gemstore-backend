@@ -1,7 +1,11 @@
 package com.gemstore.gemstone_store.controller;
 
 import com.gemstore.gemstone_store.model.CTPhieuMuaHang;
+import com.gemstore.gemstone_store.model.PhieuMuaHang;
+import com.gemstore.gemstone_store.model.SanPham;
 import com.gemstore.gemstone_store.model.id.CTPhieuMuaHangId;
+import com.gemstore.gemstone_store.repository.PhieuMuaHangRepository;
+import com.gemstore.gemstone_store.repository.SanPhamRepository;
 import com.gemstore.gemstone_store.service.CTPhieuMuaHangService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,6 +27,12 @@ public class CTPhieuMuaHangController {
 
     @Autowired
     private CTPhieuMuaHangService service;
+
+    @Autowired
+    private PhieuMuaHangRepository phieuMuaHangRepository;
+
+    @Autowired
+    private SanPhamRepository sanPhamRepository;
 
     @Operation(summary = "Lấy tất cả chi tiết phiếu mua hàng")
     @GetMapping
@@ -53,10 +63,24 @@ public class CTPhieuMuaHangController {
                     .collect(Collectors.joining(", "));
             return ResponseEntity.badRequest().body("Lỗi: " + errors);
         }
-        CTPhieuMuaHang saved = service.save(ct);
-        return ResponseEntity.status(
-                ct.getId() == null ? HttpStatus.CREATED : HttpStatus.OK
-        ).body(saved);
+        try {
+
+            PhieuMuaHang pmh = phieuMuaHangRepository.findById(ct.getPhieuMuaHang().getSoPhieuMH())
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy PhieuMuaHang"));
+            SanPham sp = sanPhamRepository.findById(ct.getSanPham().getMaSanPham())
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy SanPham"));
+
+            ct.setPhieuMuaHang(pmh);
+            ct.setSanPham(sp);
+            ct.setId(new CTPhieuMuaHangId(ct.getPhieuMuaHang().getSoPhieuMH(), ct.getSanPham().getMaSanPham()));
+
+            CTPhieuMuaHang saved = service.save(ct);
+            return ResponseEntity.status(
+                    ct.getId() == null ? HttpStatus.CREATED : HttpStatus.OK
+            ).body(saved);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Lỗi: " + e.getMessage());
+        }
     }
 
     @Operation(summary = "Xóa chi tiết phiếu mua hàng theo mã")

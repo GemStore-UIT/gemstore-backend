@@ -21,15 +21,13 @@ public class CTPhieuDichVu {
     @MapsId("soPhieuDV")
     @ManyToOne
     @JoinColumn(name = "SoPhieuDV", nullable = false)
-    @NotNull
-    @NotBlank(message = "Mã phiếu dịch vụ không được để trống")
+    @NotNull(message = "Mã phiếu dịch vụ không được để trống")
     private PhieuDichVu phieuDichVu;
 
     @MapsId("maLDV")
     @ManyToOne
     @JoinColumn(name = "MaLDV", nullable = false)
-    @NotNull
-    @NotBlank(message = "Mã loại dịch vụ không được để trống")
+    @NotNull(message = "Mã loại dịch vụ không được để trống")
     private LoaiDichVu loaiDichVu;
 
     @Column(name = "DonGia")

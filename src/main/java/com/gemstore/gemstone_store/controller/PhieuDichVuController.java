@@ -1,7 +1,6 @@
 package com.gemstore.gemstone_store.controller;
 
 import com.gemstore.gemstone_store.model.PhieuDichVu;
-import com.gemstore.gemstone_store.model.PhieuMuaHang;
 import com.gemstore.gemstone_store.service.PhieuDichVuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -43,7 +42,7 @@ public class PhieuDichVuController {
                         .body("Không tìm thấy phiếu dịch vụ với mã: " + id));
     }
 
-    @Operation(summary = "Cập nhật phiếu dịch vụ")
+    @Operation(summary = "Tạo hoặc cập nhật phiếu dịch vụ")
     @PostMapping
     public ResponseEntity<?> createOrUpdate(@Valid @RequestBody PhieuDichVu pdv, BindingResult result) {
         if (result.hasErrors()) {

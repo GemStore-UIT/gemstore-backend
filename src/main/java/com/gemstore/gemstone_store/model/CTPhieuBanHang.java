@@ -3,7 +3,6 @@ package com.gemstore.gemstone_store.model;
 import com.gemstore.gemstone_store.model.id.CTPhieuBanHangId;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -21,15 +20,13 @@ public class CTPhieuBanHang {
     @MapsId("maSanPham")
     @ManyToOne
     @JoinColumn(name = "MaSanPham", nullable = false)
-    @NotNull
-    @NotBlank(message = "Mã sản phẩm không được để trống")
+    @NotNull(message = "Mã sản phẩm không được để trống")
     private SanPham sanPham;
 
     @MapsId("soPhieuBH")
     @ManyToOne
     @JoinColumn(name = "SoPhieuBH", nullable = false)
-    @NotNull
-    @NotBlank(message = "Số phiếu mua hàng không được để trống")
+    @NotNull(message = "Số phiếu bán hàng không được để trống")
     private PhieuBanHang phieuBanHang;
 
     @Column(name = "SoLuong")

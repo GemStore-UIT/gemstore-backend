@@ -1,7 +1,6 @@
 package com.gemstore.gemstone_store.controller;
 
 import com.gemstore.gemstone_store.model.LoaiDichVu;
-import com.gemstore.gemstone_store.model.PhieuDichVu;
 import com.gemstore.gemstone_store.service.LoaiDichVuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -43,7 +42,7 @@ public class LoaiDichVuController {
                         .body("Không tìm thấy loại dịch vụ với mã: " + id));
     }
 
-    @Operation(summary = "Cập nhật loại dịch vụ")
+    @Operation(summary = "Tạo hoặc cập nhật loại dịch vụ")
     @PostMapping
     public ResponseEntity<?> createOrUpdate(@Valid @RequestBody LoaiDichVu ldv, BindingResult result) {
         if (result.hasErrors()) {
