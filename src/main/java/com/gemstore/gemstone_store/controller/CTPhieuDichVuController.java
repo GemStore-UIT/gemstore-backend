@@ -64,15 +64,6 @@ public class CTPhieuDichVuController {
             return ResponseEntity.badRequest().body("Lỗi: " + errors);
         }
         try {
-            PhieuDichVu pdv = phieuDichVuRepository.findById(ct.getPhieuDichVu().getSoPhieuDV()).
-                    orElseThrow(() -> new RuntimeException("Không tìm thấy PhieuDichVu: "));
-            LoaiDichVu ldv = loaiDichVuRepository.findById(ct.getLoaiDichVu().getMaLDV()).
-                    orElseThrow(() -> new RuntimeException("Không tìm thấy LoaiDichVu"));
-
-            ct.setPhieuDichVu(pdv);
-            ct.setLoaiDichVu(ldv);
-            ct.setId(new CTPhieuDichVuId(ct.getPhieuDichVu().getSoPhieuDV(), ct.getLoaiDichVu().getMaLDV()));
-
             var saved = service.save(ct);
             return ResponseEntity.status(
                     ct.getId() == null ? HttpStatus.CREATED : HttpStatus.OK

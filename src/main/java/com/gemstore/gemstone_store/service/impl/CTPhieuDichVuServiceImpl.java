@@ -1,9 +1,12 @@
 package com.gemstore.gemstone_store.service.impl;
 
 import com.gemstore.gemstone_store.model.CTPhieuDichVu;
+import com.gemstore.gemstone_store.model.LoaiDichVu;
+import com.gemstore.gemstone_store.model.PhieuDichVu;
 import com.gemstore.gemstone_store.model.id.CTPhieuDichVuId;
 import com.gemstore.gemstone_store.repository.CTPhieuDichVuRepository;
 import com.gemstore.gemstone_store.repository.LoaiDichVuRepository;
+import com.gemstore.gemstone_store.repository.PhieuDichVuRepository;
 import com.gemstore.gemstone_store.service.CTPhieuDichVuService;
 import com.gemstore.gemstone_store.service.PhieuDichVuService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,9 @@ public class CTPhieuDichVuServiceImpl implements CTPhieuDichVuService {
 
     @Autowired
     private CTPhieuDichVuRepository repo;
+
+    @Autowired
+    private PhieuDichVuRepository pdvRepo;
 
     @Autowired
     private LoaiDichVuRepository ldvRepo;
@@ -36,14 +42,18 @@ public class CTPhieuDichVuServiceImpl implements CTPhieuDichVuService {
 
     @Override
     public CTPhieuDichVu save(CTPhieuDichVu ct) throws Exception {
-        String maLDV = ct.getId().getMaLDV();
+        String soPhieuDV = ct.getPhieuDichVu().getSoPhieuDV();
+        String maLDV = ct.getLoaiDichVu().getMaLDV();
 
-        var ldvOpt = ldvRepo.findById(maLDV);
-        if (ldvOpt.isEmpty()) {
-            throw new Exception("Không tìm thấy loại dịch vụ: " + maLDV);
-        }
+        PhieuDichVu pdv = pdvRepo.findById(soPhieuDV).
+                orElseThrow(() -> new RuntimeException("Không tìm thấy phiếu dịch vụ: " + soPhieuDV));
+        LoaiDichVu ldv = ldvRepo.findById(maLDV).
+                orElseThrow(() -> new RuntimeException("Không tìm thấy LoaiDichVu: " + maLDV));
 
-        var ldv = ldvOpt.get();
+        ct.setPhieuDichVu(pdv);
+        ct.setLoaiDichVu(ldv);
+        ct.setId(new CTPhieuDichVuId(pdv.getSoPhieuDV(), ldv.getMaLDV()));
+
         int donGia = ldv.getDonGia();
         int tyLeTraTruoc = ldv.getTraTruoc();
 

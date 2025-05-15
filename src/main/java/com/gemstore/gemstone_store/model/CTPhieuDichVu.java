@@ -15,17 +15,16 @@ import java.time.LocalDateTime;
 public class CTPhieuDichVu {
 
     @EmbeddedId
-    @NotNull
-    private CTPhieuDichVuId id;
+    private CTPhieuDichVuId id = new CTPhieuDichVuId();
 
     @MapsId("soPhieuDV")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SoPhieuDV", nullable = false)
     @NotNull(message = "Mã phiếu dịch vụ không được để trống")
     private PhieuDichVu phieuDichVu;
 
     @MapsId("maLDV")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaLDV", nullable = false)
     @NotNull(message = "Mã loại dịch vụ không được để trống")
     private LoaiDichVu loaiDichVu;
