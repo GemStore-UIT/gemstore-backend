@@ -1,8 +1,13 @@
 package com.gemstore.gemstone_store.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "LOAIDICHVU")
@@ -28,4 +33,9 @@ public class LoaiDichVu {
     @Column(name = "TraTruoc")
     @Min(value = 0, message = "Tiền trả trước phải lớn hơn hoặc bằng 0")
     private int traTruoc;
+
+    @Column
+    @OneToMany(mappedBy = "loaiDichVu", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonIgnore
+    private Set<CTPhieuDichVu> ctphieudichvus = new HashSet<>();
 }

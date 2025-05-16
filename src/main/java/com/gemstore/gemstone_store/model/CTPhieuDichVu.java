@@ -1,5 +1,9 @@
 package com.gemstore.gemstone_store.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.gemstore.gemstone_store.model.id.CTPhieuDichVuId;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -15,22 +19,25 @@ import java.time.LocalDateTime;
 public class CTPhieuDichVu {
 
     @EmbeddedId
-    private CTPhieuDichVuId id = new CTPhieuDichVuId();
+    @JsonIgnore
+    private CTPhieuDichVuId id;
 
     @MapsId("soPhieuDV")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SoPhieuDV", nullable = false)
+    @JsonIgnoreProperties({"ctPhieuDichVus"})
+    @JoinColumn(name = "SoPhieuDV", referencedColumnName = "SoPhieuDV")
     @NotNull(message = "Mã phiếu dịch vụ không được để trống")
     private PhieuDichVu phieuDichVu;
 
     @MapsId("maLDV")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MaLDV", nullable = false)
+    @JsonIgnoreProperties({"ctPhieuDichVus"})
+    @JoinColumn(name = "MaLDV", referencedColumnName = "MaLDV")
     @NotNull(message = "Mã loại dịch vụ không được để trống")
     private LoaiDichVu loaiDichVu;
 
     @Column(name = "DonGia")
-    @Min(value = 1, message = "Đơn giá phải lớn hơn 0")
+    @Min(value = 0, message = "Đơn giá phải lớn hơn 0")
     private int donGia;
 
     @Column(name = "SoLuong")

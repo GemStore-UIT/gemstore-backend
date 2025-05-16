@@ -9,7 +9,10 @@ import com.gemstore.gemstone_store.repository.LoaiDichVuRepository;
 import com.gemstore.gemstone_store.repository.PhieuDichVuRepository;
 import com.gemstore.gemstone_store.service.CTPhieuDichVuService;
 import com.gemstore.gemstone_store.service.PhieuDichVuService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,41 +44,50 @@ public class CTPhieuDichVuServiceImpl implements CTPhieuDichVuService {
     }
 
     @Override
-    public CTPhieuDichVu save(CTPhieuDichVu ct) throws Exception {
-        String soPhieuDV = ct.getPhieuDichVu().getSoPhieuDV();
-        String maLDV = ct.getLoaiDichVu().getMaLDV();
+    @Transactional
+    public ResponseEntity<?> save(CTPhieuDichVu ct) {
+        try {
+            String soPhieuDV = ct.getPhieuDichVu().getSoPhieuDV();
+            String maLDV = ct.getLoaiDichVu().getMaLDV();
 
-        PhieuDichVu pdv = pdvRepo.findById(soPhieuDV).
-                orElseThrow(() -> new RuntimeException("Không tìm thấy phiếu dịch vụ: " + soPhieuDV));
-        LoaiDichVu ldv = ldvRepo.findById(maLDV).
-                orElseThrow(() -> new RuntimeException("Không tìm thấy LoaiDichVu: " + maLDV));
+            PhieuDichVu pdv = pdvRepo.findById(soPhieuDV).
+                    orElseThrow(() -> new RuntimeException("Không tìm thấy phiếu dịch vụ: " + soPhieuDV));
+            LoaiDichVu ldv = ldvRepo.findById(maLDV).
+                    orElseThrow(() -> new RuntimeException("Không tìm thấy LoaiDichVu: " + maLDV));
 
-        ct.setPhieuDichVu(pdv);
-        ct.setLoaiDichVu(ldv);
-        ct.setId(new CTPhieuDichVuId(pdv.getSoPhieuDV(), ldv.getMaLDV()));
+            int donGia = ldv.getDonGia();
+            int tyLeTraTruoc = ldv.getTraTruoc();
 
-        int donGia = ldv.getDonGia();
-        int tyLeTraTruoc = ldv.getTraTruoc();
+            int thanhTien = donGia * ct.getSoLuong();
+            int traTruoc = ct.getTraTruoc();
 
-        int thanhTien = donGia * ct.getSoLuong();
-        int traTruoc = ct.getTraTruoc();
+            if (traTruoc < (thanhTien * tyLeTraTruoc / 100)) {
+                throw new Exception("Số tiền trả trước không đủ tối thiểu " + tyLeTraTruoc + "%");
+            }
 
-        if (traTruoc < (thanhTien * tyLeTraTruoc / 100)) {
-            throw new Exception("Số tiền trả trước không đủ tối thiểu " + tyLeTraTruoc + "%");
+            ct.setDonGia(donGia);
+            ct.setThanhTien(thanhTien);
+            ct.setConLai(thanhTien - traTruoc);
+
+            //phieuDichVuService.updateTongTien(ct.getId().getSoPhieuDV());
+
+            ct.setPhieuDichVu(pdv);
+            ct.setLoaiDichVu(ldv);
+            ct.setId(new CTPhieuDichVuId(soPhieuDV, maLDV));
+
+            CTPhieuDichVu saved = repo.save(ct);
+
+            return ResponseEntity.status(
+                    ct.getId() == null ? HttpStatus.CREATED : HttpStatus.OK
+            ).body(saved);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Lỗi: " + e.getMessage());
         }
-
-        ct.setDonGia(donGia);
-        ct.setThanhTien(thanhTien);
-        ct.setConLai(thanhTien - traTruoc);
-        repo.save(ct);
-
-        phieuDichVuService.updateTongTien(ct.getId().getSoPhieuDV());
-
-        return ct;
     }
 
     @Override
     public void delete(CTPhieuDichVuId id) {
         repo.deleteById(id);
     }
+
 }

@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CTPhieuDichVuRepository extends JpaRepository<CTPhieuDichVu, CTPhieuDichVuId> {
-    List<CTPhieuDichVu> findById_SoPhieuDV(String soPhieuDV);
+    List<CTPhieuDichVu> findByPhieuDichVu_SoPhieuDV(String soPhieuDV);
 }
