@@ -57,17 +57,18 @@ public class CTPhieuDichVuController {
     @Operation(summary = "Tạo hoặc cập nhật chi tiết phiếu dịch vụ")
     @PostMapping
     public ResponseEntity<?> createOrUpdate(@Valid @RequestBody CTPhieuDichVu ct, BindingResult result) {
-        if (result.hasErrors()) {
-            String errors = result.getAllErrors().stream()
-                    .map(ObjectError::getDefaultMessage)
-                    .collect(Collectors.joining(", "));
-            return ResponseEntity.badRequest().body("Lỗi: " + errors);
-        }
         try {
-            var saved = service.save(ct);
-            return ResponseEntity.status(
-                    ct.getId() == null ? HttpStatus.CREATED : HttpStatus.OK
-            ).body(saved);
+            if (result.hasErrors()) {
+                String errors = result.getAllErrors().stream()
+                        .map(ObjectError::getDefaultMessage)
+                        .collect(Collectors.joining(", "));
+                return ResponseEntity.badRequest().body("Lỗi: " + errors);
+            }
+
+                var saved = service.save(ct);
+                return ResponseEntity.status(
+                        ct.getId() == null ? HttpStatus.CREATED : HttpStatus.OK
+                ).body(saved);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Lỗi: " + e.getMessage());
         }

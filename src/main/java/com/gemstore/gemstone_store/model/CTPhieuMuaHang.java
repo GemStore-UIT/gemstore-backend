@@ -1,5 +1,7 @@
 package com.gemstore.gemstone_store.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gemstore.gemstone_store.model.id.CTPhieuMuaHangId;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -14,15 +16,16 @@ import lombok.*;
 public class CTPhieuMuaHang {
 
     @EmbeddedId
+    @JsonIgnore
     private CTPhieuMuaHangId id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("maSanPham")
     @JoinColumn(name = "MaSanPham", nullable = false)
     @NotNull(message = "Mã sản phẩm không được để trống")
     private SanPham sanPham;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("soPhieuMH")
     @JoinColumn(name = "SoPhieuMH", nullable = false)
     @NotNull(message = "Số phiếu mua hàng không được để trống")
@@ -33,6 +36,7 @@ public class CTPhieuMuaHang {
     private int soLuong;
 
     @Column(name = "ThanhTien")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Min(value = 0, message = "Thành tiền phải lớn hơn hoặc bằng 0")
     private int thanhTien;
 }

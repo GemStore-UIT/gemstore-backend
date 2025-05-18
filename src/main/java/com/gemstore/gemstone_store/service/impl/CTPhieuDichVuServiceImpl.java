@@ -69,11 +69,11 @@ public class CTPhieuDichVuServiceImpl implements CTPhieuDichVuService {
             ct.setThanhTien(thanhTien);
             ct.setConLai(thanhTien - traTruoc);
 
-            //phieuDichVuService.updateTongTien(ct.getId().getSoPhieuDV());
-
             ct.setPhieuDichVu(pdv);
             ct.setLoaiDichVu(ldv);
             ct.setId(new CTPhieuDichVuId(soPhieuDV, maLDV));
+
+            phieuDichVuService.updateTongTien(ct.getId().getSoPhieuDV());
 
             CTPhieuDichVu saved = repo.save(ct);
 

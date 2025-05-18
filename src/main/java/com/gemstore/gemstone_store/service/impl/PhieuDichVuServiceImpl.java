@@ -18,6 +18,7 @@ public class PhieuDichVuServiceImpl implements PhieuDichVuService {
     @Autowired
     private PhieuDichVuRepository repo;
 
+    @Autowired
     private CTPhieuDichVuRepository ctRepo;
 
     @Override

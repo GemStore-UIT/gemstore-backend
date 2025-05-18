@@ -34,8 +34,8 @@ public class LoaiDichVu {
     @Min(value = 0, message = "Tiền trả trước phải lớn hơn hoặc bằng 0")
     private int traTruoc;
 
-    @Column
-    @OneToMany(mappedBy = "loaiDichVu", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JsonIgnore
-    private Set<CTPhieuDichVu> ctphieudichvus = new HashSet<>();
+//    @Column
+//    @OneToMany(mappedBy = "loaiDichVu", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+//    @JsonIgnore
+//    private Set<CTPhieuDichVu> ctphieudichvus = new HashSet<>();
 }

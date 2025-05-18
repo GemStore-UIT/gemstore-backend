@@ -1,5 +1,6 @@
 package com.gemstore.gemstone_store.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gemstore.gemstone_store.model.id.CTPhieuBanHangId;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -34,6 +35,7 @@ public class CTPhieuBanHang {
     private int soLuong;
 
     @Column(name = "ThanhTien")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Min(value = 0, message = "Thành tiền phải lớn hơn hoặc bằng 0")
     private int thanhTien;
 }

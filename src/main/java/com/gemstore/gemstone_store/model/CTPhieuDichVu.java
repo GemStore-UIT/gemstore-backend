@@ -1,9 +1,6 @@
 package com.gemstore.gemstone_store.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+import com.fasterxml.jackson.annotation.*;
 import com.gemstore.gemstone_store.model.id.CTPhieuDichVuId;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -24,14 +21,14 @@ public class CTPhieuDichVu {
 
     @MapsId("soPhieuDV")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties({"ctPhieuDichVus"})
+    //@JsonIgnoreProperties({"ctPhieuDichVus"})
     @JoinColumn(name = "SoPhieuDV", referencedColumnName = "SoPhieuDV")
     @NotNull(message = "Mã phiếu dịch vụ không được để trống")
     private PhieuDichVu phieuDichVu;
 
     @MapsId("maLDV")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties({"ctPhieuDichVus"})
+    //@JsonIgnoreProperties({"ctPhieuDichVus"})
     @JoinColumn(name = "MaLDV", referencedColumnName = "MaLDV")
     @NotNull(message = "Mã loại dịch vụ không được để trống")
     private LoaiDichVu loaiDichVu;
@@ -45,6 +42,7 @@ public class CTPhieuDichVu {
     private int soLuong;
 
     @Column(name = "ThanhTien")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Min(value = 0)
     private int thanhTien;
 
@@ -53,6 +51,7 @@ public class CTPhieuDichVu {
     private int traTruoc;
 
     @Column(name = "ConLai")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Min(value = 0)
     private int conLai;
 

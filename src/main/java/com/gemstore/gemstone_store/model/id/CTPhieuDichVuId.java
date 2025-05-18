@@ -13,10 +13,10 @@ import java.util.Objects;
 @AllArgsConstructor
 public class CTPhieuDichVuId implements Serializable {
 
-    @Column(name = "SoPhieuDV")
+    //@Column(name = "SoPhieuDV")
     private String soPhieuDV;
 
-    @Column(name = "MaLDV")
+    //@Column(name = "MaLDV")
     private String maLDV;
 
 //    @Override
