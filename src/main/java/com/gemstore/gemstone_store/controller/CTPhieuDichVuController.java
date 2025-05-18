@@ -1,7 +1,11 @@
 package com.gemstore.gemstone_store.controller;
 
 import com.gemstore.gemstone_store.model.CTPhieuDichVu;
+import com.gemstore.gemstone_store.model.LoaiDichVu;
+import com.gemstore.gemstone_store.model.PhieuDichVu;
 import com.gemstore.gemstone_store.model.id.CTPhieuDichVuId;
+import com.gemstore.gemstone_store.repository.LoaiDichVuRepository;
+import com.gemstore.gemstone_store.repository.PhieuDichVuRepository;
 import com.gemstore.gemstone_store.service.CTPhieuDichVuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,6 +28,12 @@ public class CTPhieuDichVuController {
     @Autowired
     private CTPhieuDichVuService service;
 
+    @Autowired
+    private PhieuDichVuRepository phieuDichVuRepository;
+
+    @Autowired
+    private LoaiDichVuRepository loaiDichVuRepository;
+
     @Operation(summary = "Lấy tất cả chi tiết phiếu dịch vụ")
     @GetMapping
     public ResponseEntity<?> getAll() {
@@ -44,20 +54,21 @@ public class CTPhieuDichVuController {
                         .body("Không tìm thấy chi tiết phiếu dịch vụ."));
     }
 
-    @Operation(summary = "Cập nhật chi tiết phiếu dịch vụ")
+    @Operation(summary = "Tạo hoặc cập nhật chi tiết phiếu dịch vụ")
     @PostMapping
     public ResponseEntity<?> createOrUpdate(@Valid @RequestBody CTPhieuDichVu ct, BindingResult result) {
-        if (result.hasErrors()) {
-            String errors = result.getAllErrors().stream()
-                    .map(ObjectError::getDefaultMessage)
-                    .collect(Collectors.joining(", "));
-            return ResponseEntity.badRequest().body("Lỗi: " + errors);
-        }
         try {
-            var saved = service.save(ct);
-            return ResponseEntity.status(
-                    ct.getId() == null ? HttpStatus.CREATED : HttpStatus.OK
-            ).body(saved);
+            if (result.hasErrors()) {
+                String errors = result.getAllErrors().stream()
+                        .map(ObjectError::getDefaultMessage)
+                        .collect(Collectors.joining(", "));
+                return ResponseEntity.badRequest().body("Lỗi: " + errors);
+            }
+
+                var saved = service.save(ct);
+                return ResponseEntity.status(
+                        ct.getId() == null ? HttpStatus.CREATED : HttpStatus.OK
+                ).body(saved);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Lỗi: " + e.getMessage());
         }

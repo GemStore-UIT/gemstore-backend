@@ -1,5 +1,6 @@
 package com.gemstore.gemstone_store.model;
 
+import com.fasterxml.jackson.annotation.*;
 import com.gemstore.gemstone_store.model.id.CTPhieuDichVuId;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -15,42 +16,42 @@ import java.time.LocalDateTime;
 public class CTPhieuDichVu {
 
     @EmbeddedId
-    @NotNull
+    @JsonIgnore
     private CTPhieuDichVuId id;
 
     @MapsId("soPhieuDV")
-    @ManyToOne
-    @JoinColumn(name = "SoPhieuDV", nullable = false)
-    @NotNull
-    @NotBlank(message = "Mã phiếu dịch vụ không được để trống")
+    @ManyToOne(fetch = FetchType.LAZY)
+    //@JsonIgnoreProperties({"ctPhieuDichVus"})
+    @JoinColumn(name = "SoPhieuDV", referencedColumnName = "SoPhieuDV")
+    @NotNull(message = "Mã phiếu dịch vụ không được để trống")
     private PhieuDichVu phieuDichVu;
 
     @MapsId("maLDV")
-    @ManyToOne
-    @JoinColumn(name = "MaLDV", nullable = false)
-    @NotNull
-    @NotBlank(message = "Mã loại dịch vụ không được để trống")
+    @ManyToOne(fetch = FetchType.LAZY)
+    //@JsonIgnoreProperties({"ctPhieuDichVus"})
+    @JoinColumn(name = "MaLDV", referencedColumnName = "MaLDV")
+    @NotNull(message = "Mã loại dịch vụ không được để trống")
     private LoaiDichVu loaiDichVu;
 
     @Column(name = "DonGia")
-    @NotBlank(message = "Đơn giá không được để trống")
+    @Min(value = 0, message = "Đơn giá phải lớn hơn 0")
     private int donGia;
 
     @Column(name = "SoLuong")
-    @NotBlank(message = "Số lượng không được để trống")
     @Min(value = 1, message = "Số lượng phải lớn hơn 0")
     private int soLuong;
 
     @Column(name = "ThanhTien")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Min(value = 0)
     private int thanhTien;
 
     @Column(name = "TraTruoc")
-    @NotBlank(message = "Tiền trả trước không được để trống")
     @Min(value = 0)
     private int traTruoc;
 
     @Column(name = "ConLai")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Min(value = 0)
     private int conLai;
 

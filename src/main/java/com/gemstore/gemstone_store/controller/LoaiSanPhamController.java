@@ -1,6 +1,5 @@
 package com.gemstore.gemstone_store.controller;
 
-import com.gemstore.gemstone_store.model.DonViTinh;
 import com.gemstore.gemstone_store.model.LoaiSanPham;
 import com.gemstore.gemstone_store.service.LoaiSanPhamService;
 import io.swagger.v3.oas.annotations.Operation;

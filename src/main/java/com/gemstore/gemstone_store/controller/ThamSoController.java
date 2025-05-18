@@ -1,14 +1,10 @@
 package com.gemstore.gemstone_store.controller;
 
-import com.gemstore.gemstone_store.model.PhieuBanHang;
-import com.gemstore.gemstone_store.model.SanPham;
 import com.gemstore.gemstone_store.model.ThamSo;
-import com.gemstore.gemstone_store.service.PhieuBanHangService;
 import com.gemstore.gemstone_store.service.ThamSoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.hibernate.engine.jdbc.mutation.spi.BindingGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;

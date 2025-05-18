@@ -3,7 +3,6 @@ package com.gemstore.gemstone_store.service.impl;
 import com.gemstore.gemstone_store.model.CTPhieuDichVu;
 import com.gemstore.gemstone_store.model.PhieuDichVu;
 import com.gemstore.gemstone_store.repository.CTPhieuDichVuRepository;
-import com.gemstore.gemstone_store.repository.LoaiDichVuRepository;
 import com.gemstore.gemstone_store.repository.PhieuDichVuRepository;
 import com.gemstore.gemstone_store.service.PhieuDichVuService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,7 @@ public class PhieuDichVuServiceImpl implements PhieuDichVuService {
     @Autowired
     private PhieuDichVuRepository repo;
 
+    @Autowired
     private CTPhieuDichVuRepository ctRepo;
 
     @Override
@@ -46,18 +46,17 @@ public class PhieuDichVuServiceImpl implements PhieuDichVuService {
 
     @Override
     public void updateTongTien(String soPhieuDV) {
-        List<CTPhieuDichVu> dsChiTiet = ctRepo.findById_SoPhieuDV(soPhieuDV);
+        List<CTPhieuDichVu> dsChiTiet = ctRepo.findByPhieuDichVu_SoPhieuDV(soPhieuDV);
 
         int tongTien = 0;
         int tongTraTruoc = 0;
-        int tongConLai = 0;
 
         for (var ct : dsChiTiet) {
             tongTien += ct.getThanhTien();
             tongTraTruoc += ct.getTraTruoc();
         }
 
-        tongConLai = tongTien - tongTraTruoc;
+        int tongConLai = tongTien - tongTraTruoc;
 
         boolean isHoanThanh = dsChiTiet.stream()
                 .allMatch(ct -> "Đã giao".equals(ct.getTinhTrang()));

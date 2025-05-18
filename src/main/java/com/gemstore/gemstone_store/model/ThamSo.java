@@ -19,6 +19,5 @@ public class ThamSo {
     private String tenThamSo;
 
     @Column(name = "GiaTri")
-    @NotBlank(message = "Giá trị không được để trống")
     private int giaTri;
 }

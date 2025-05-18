@@ -24,6 +24,6 @@ public class PhieuBanHang {
     private LocalDateTime ngayLap;
 
     @Column(name = "KhachHang", length = 50)
-    @NotBlank(message = "Số phiếu bán hàng không được để trống")
+    @NotBlank(message = "Khách hàng không được để trống")
     private String khachHang;
 }
