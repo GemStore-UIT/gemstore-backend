@@ -1,5 +1,7 @@
 package com.gemstore.gemstone_store.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gemstore.gemstone_store.model.id.CTPhieuBanHangId;
 import jakarta.persistence.*;
@@ -15,18 +17,20 @@ import lombok.*;
 public class CTPhieuBanHang {
 
     @EmbeddedId
-    @NotNull
+    @JsonIgnore
     private CTPhieuBanHangId id;
 
     @MapsId("maSanPham")
-    @ManyToOne
-    @JoinColumn(name = "MaSanPham", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JoinColumn(name = "MaSanPham", referencedColumnName = "MaSanPham")
     @NotNull(message = "Mã sản phẩm không được để trống")
     private SanPham sanPham;
 
     @MapsId("soPhieuBH")
-    @ManyToOne
-    @JoinColumn(name = "SoPhieuBH", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JoinColumn(name = "SoPhieuBH", referencedColumnName = "SoPhieuBH")
     @NotNull(message = "Số phiếu bán hàng không được để trống")
     private PhieuBanHang phieuBanHang;
 

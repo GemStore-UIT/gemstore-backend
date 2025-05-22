@@ -50,6 +50,7 @@ public class CTPhieuBanHangServiceImpl implements CTPhieuBanHangService {
         ct.setSanPham(sp);
         ct.setPhieuBanHang(pbh);
         ct.setId(new CTPhieuBanHangId(maSP, soPhieuBH));
+        ct.setThanhTien((int)(sp.getDonGia() * ct.getSoLuong() * sp.getLoaiSanPham().getLoiNhuan()));
 
         return repo.save(ct);
     }

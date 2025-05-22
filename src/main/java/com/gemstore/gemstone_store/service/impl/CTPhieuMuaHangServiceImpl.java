@@ -44,8 +44,12 @@ public class CTPhieuMuaHangServiceImpl implements CTPhieuMuaHangService {
 
         SanPham sp = spRepo.findById(maSP)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm: " + maSP));
-        PhieuMuaHang pbh = pmhRepo.findById(soPhieuMH)
+        PhieuMuaHang pmh = pmhRepo.findById(soPhieuMH)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy phiếu mua hàng: " + soPhieuMH));
+
+        ct.setSanPham(sp);
+        ct.setPhieuMuaHang(pmh);
+        ct.setId(new CTPhieuMuaHangId(maSP, soPhieuMH));
 
         return repo.save(ct);
     }
