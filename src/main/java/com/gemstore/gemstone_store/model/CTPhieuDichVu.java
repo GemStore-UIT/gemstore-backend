@@ -22,16 +22,16 @@ public class CTPhieuDichVu {
     @MapsId("soPhieuDV")
     @ManyToOne(fetch = FetchType.LAZY)
     //@JsonIgnoreProperties({"ctPhieuDichVus"})
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JoinColumn(name = "SoPhieuDV", referencedColumnName = "SoPhieuDV")
+    @JsonIgnoreProperties({"ngayLap","khachHang","sdt","tongTien","tongTienTraTruoc","tongTienConLai", "tinhTrang","hibernateLazyInitializer", "handler"})
     @NotNull(message = "Mã phiếu dịch vụ không được để trống")
     private PhieuDichVu phieuDichVu;
 
     @MapsId("maLDV")
     @ManyToOne(fetch = FetchType.LAZY)
     //@JsonIgnoreProperties({"ctPhieuDichVus"})
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JoinColumn(name = "MaLDV", referencedColumnName = "MaLDV")
+    @JsonIgnoreProperties({"tenLDV","donGia","traTruoc","hibernateLazyInitializer", "handler"})
     @NotNull(message = "Mã loại dịch vụ không được để trống")
     private LoaiDichVu loaiDichVu;
 

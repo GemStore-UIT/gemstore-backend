@@ -1,6 +1,8 @@
 package com.gemstore.gemstone_store.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -26,4 +28,9 @@ public class PhieuBanHang {
     @Column(name = "KhachHang", length = 50)
     @NotBlank(message = "Khách hàng không được để trống")
     private String khachHang;
+
+    @Column(name = "TongTien")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Min(value = 0, message = "Tổng tiền phải lớn hơn 0")
+    private int tongTien;
 }

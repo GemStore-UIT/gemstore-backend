@@ -1,5 +1,6 @@
 package com.gemstore.gemstone_store.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -23,6 +24,7 @@ public class LoaiSanPham {
 
     @ManyToOne
     @JoinColumn(name = "DonViTinh", referencedColumnName = "MaDonVi", nullable = false)
+    @JsonIgnoreProperties({"tenDonVi"})
     @NotNull(message = "Đơn vị tính không được để trống")
     private DonViTinh donViTinh;
 

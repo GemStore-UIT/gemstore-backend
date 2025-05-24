@@ -27,6 +27,9 @@ public class CTPhieuBanHangServiceImpl implements CTPhieuBanHangService {
     @Autowired
     private PhieuBanHangRepository pbhRepo;
 
+    @Autowired
+    private PhieuBanHangService pbhService;
+
     @Override
     public List<CTPhieuBanHang> getAll() {
         return repo.findAll();
@@ -51,6 +54,8 @@ public class CTPhieuBanHangServiceImpl implements CTPhieuBanHangService {
         ct.setPhieuBanHang(pbh);
         ct.setId(new CTPhieuBanHangId(maSP, soPhieuBH));
         ct.setThanhTien((int)(sp.getDonGia() * ct.getSoLuong() * sp.getLoaiSanPham().getLoiNhuan()));
+
+        pbhService.updateTongTien(soPhieuBH);
 
         return repo.save(ct);
     }
