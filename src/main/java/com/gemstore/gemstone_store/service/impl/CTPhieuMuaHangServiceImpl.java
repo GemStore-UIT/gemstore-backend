@@ -9,6 +9,7 @@ import com.gemstore.gemstone_store.repository.CTPhieuMuaHangRepository;
 import com.gemstore.gemstone_store.repository.PhieuMuaHangRepository;
 import com.gemstore.gemstone_store.repository.SanPhamRepository;
 import com.gemstore.gemstone_store.service.CTPhieuMuaHangService;
+import com.gemstore.gemstone_store.service.PhieuMuaHangService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,9 @@ public class CTPhieuMuaHangServiceImpl implements CTPhieuMuaHangService {
 
     @Autowired
     private PhieuMuaHangRepository pmhRepo;
+
+    @Autowired
+    private PhieuMuaHangService pmhService;
 
     @Override
     public List<CTPhieuMuaHang> getAll() {
@@ -51,7 +55,11 @@ public class CTPhieuMuaHangServiceImpl implements CTPhieuMuaHangService {
         ct.setPhieuMuaHang(pmh);
         ct.setId(new CTPhieuMuaHangId(maSP, soPhieuMH));
 
-        return repo.save(ct);
+        CTPhieuMuaHang saved = repo.save(ct);
+
+        pmhService.updateTongTien(soPhieuMH);
+
+        return saved;
     }
 
     @Override

@@ -24,7 +24,6 @@ public class LoaiSanPham {
 
     @ManyToOne
     @JoinColumn(name = "DonViTinh", referencedColumnName = "MaDonVi", nullable = false)
-    @JsonIgnoreProperties({"tenDonVi"})
     @NotNull(message = "Đơn vị tính không được để trống")
     private DonViTinh donViTinh;
 
