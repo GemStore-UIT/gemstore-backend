@@ -1,5 +1,6 @@
 package com.gemstore.gemstone_store.controller;
 
+import com.gemstore.gemstone_store.model.DonViTinh;
 import com.gemstore.gemstone_store.model.LoaiDichVu;
 import com.gemstore.gemstone_store.service.LoaiDichVuService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -68,4 +69,15 @@ public class LoaiDichVuController {
         service.delete(id);
         return ResponseEntity.ok("Xóa loại dịch vụ thành công.");
     }
+
+    @Operation(summary = "Tìm loại dịch vụ theo tên")
+    @GetMapping("/search")
+    public ResponseEntity<?> searchByTen(@RequestParam String keyword) {
+        List<LoaiDichVu> result = service.getAllByName(keyword);
+        if (result.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy kết quả nào.");
+        }
+        return ResponseEntity.ok(result);
+    }
+
 }

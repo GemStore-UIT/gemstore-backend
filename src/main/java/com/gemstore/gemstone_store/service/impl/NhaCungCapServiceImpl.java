@@ -34,4 +34,9 @@ public class NhaCungCapServiceImpl implements NhaCungCapService {
     public void delete(String id) {
         repo.deleteById(id);
     }
+
+    @Override
+    public List<NhaCungCap> getAllByName(String name){
+        return repo.findByTenNCCContainingIgnoreCase(name);
+    }
 }

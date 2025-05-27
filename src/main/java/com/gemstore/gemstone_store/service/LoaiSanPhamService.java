@@ -12,4 +12,6 @@ public interface LoaiSanPhamService {
     LoaiSanPham save(LoaiSanPham loaiSanPham);
     void delete(String id);
 
+    List<LoaiSanPham> getAllByName(String name);
+
 }

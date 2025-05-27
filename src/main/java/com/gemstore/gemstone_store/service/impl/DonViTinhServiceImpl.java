@@ -34,4 +34,9 @@ public class DonViTinhServiceImpl implements DonViTinhService {
     public void delete(String id){
         repo.deleteById(id);
     }
+
+    @Override
+    public List<DonViTinh> getAllByName(String name){
+        return repo.findByTenDonViContainingIgnoreCase(name);
+    }
 }

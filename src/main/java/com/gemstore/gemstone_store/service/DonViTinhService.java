@@ -12,4 +12,5 @@ public interface DonViTinhService {
     DonViTinh save(DonViTinh dvt);
     void delete(String id);
 
+    List<DonViTinh> getAllByName(String name);
 }

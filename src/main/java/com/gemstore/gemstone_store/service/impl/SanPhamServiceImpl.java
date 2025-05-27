@@ -35,4 +35,8 @@ public class SanPhamServiceImpl implements SanPhamService {
         repo.deleteById(id);
     }
 
+    @Override
+    public List<SanPham> getAllByName(String name){
+        return repo.findByTenSanPhamContainingIgnoreCase(name);
+    }
 }

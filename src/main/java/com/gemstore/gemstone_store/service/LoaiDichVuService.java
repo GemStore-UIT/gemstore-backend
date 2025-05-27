@@ -10,4 +10,6 @@ public interface LoaiDichVuService {
     Optional<LoaiDichVu> getById(String id);
     LoaiDichVu save(LoaiDichVu ldv);
     void delete(String id);
+
+    List<LoaiDichVu> getAllByName(String name);
 }

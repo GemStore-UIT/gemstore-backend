@@ -34,4 +34,9 @@ public class LoaiDichVuServiceImpl implements LoaiDichVuService {
     public void delete(String id) {
         repo.deleteById(id);
     }
+
+    @Override
+    public List<LoaiDichVu> getAllByName(String name){
+        return repo.findByTenDichVuContainingIgnoreCase(name);
+    }
 }

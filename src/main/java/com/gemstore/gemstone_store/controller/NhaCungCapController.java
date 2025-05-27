@@ -1,5 +1,6 @@
 package com.gemstore.gemstone_store.controller;
 
+import com.gemstore.gemstone_store.model.LoaiSanPham;
 import com.gemstore.gemstone_store.model.NhaCungCap;
 import com.gemstore.gemstone_store.service.NhaCungCapService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -68,5 +69,15 @@ public class NhaCungCapController {
         }
         service.delete(id);
         return ResponseEntity.ok("Xóa nhà cung cấp thành công.");
+    }
+
+    @Operation(summary = "Tìm nhà cung cấp theo tên")
+    @GetMapping("/search")
+    public ResponseEntity<?> searchByTen(@RequestParam String keyword) {
+        List<NhaCungCap> result = service.getAllByName(keyword);
+        if (result.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy kết quả nào.");
+        }
+        return ResponseEntity.ok(result);
     }
 }

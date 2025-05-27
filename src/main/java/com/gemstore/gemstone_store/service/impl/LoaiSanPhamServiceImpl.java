@@ -32,4 +32,9 @@ public class LoaiSanPhamServiceImpl implements LoaiSanPhamService {
     public void delete(String id){
         repo.deleteById(id);
     }
+
+    @Override
+    public List<LoaiSanPham> getAllByName(String name){
+        return repo.findByTenLSPContainingIgnoreCase(name);
+    }
 }
