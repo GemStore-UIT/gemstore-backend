@@ -9,6 +9,7 @@ import com.gemstore.gemstone_store.repository.CTPhieuMuaHangRepository;
 import com.gemstore.gemstone_store.repository.PhieuMuaHangRepository;
 import com.gemstore.gemstone_store.repository.SanPhamRepository;
 import com.gemstore.gemstone_store.service.CTPhieuMuaHangService;
+import com.gemstore.gemstone_store.service.PhieuMuaHangService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,9 @@ public class CTPhieuMuaHangServiceImpl implements CTPhieuMuaHangService {
     @Autowired
     private PhieuMuaHangRepository pmhRepo;
 
+    @Autowired
+    private PhieuMuaHangService pmhService;
+
     @Override
     public List<CTPhieuMuaHang> getAll() {
         return repo.findAll();
@@ -44,10 +48,18 @@ public class CTPhieuMuaHangServiceImpl implements CTPhieuMuaHangService {
 
         SanPham sp = spRepo.findById(maSP)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm: " + maSP));
-        PhieuMuaHang pbh = pmhRepo.findById(soPhieuMH)
+        PhieuMuaHang pmh = pmhRepo.findById(soPhieuMH)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy phiếu mua hàng: " + soPhieuMH));
 
-        return repo.save(ct);
+        ct.setSanPham(sp);
+        ct.setPhieuMuaHang(pmh);
+        ct.setId(new CTPhieuMuaHangId(maSP, soPhieuMH));
+
+        CTPhieuMuaHang saved = repo.save(ct);
+
+        pmhService.updateTongTien(soPhieuMH);
+
+        return saved;
     }
 
     @Override

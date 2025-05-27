@@ -10,4 +10,5 @@ public interface PhieuMuaHangService {
     Optional<PhieuMuaHang> getById(String id);
     PhieuMuaHang save(PhieuMuaHang pmh);
     void delete(String id);
+    void updateTongTien(String soPhieuMH);
 }

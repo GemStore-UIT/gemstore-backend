@@ -1,6 +1,7 @@
 package com.gemstore.gemstone_store.service.impl;
 
 import com.gemstore.gemstone_store.model.CTPhieuBanHang;
+import com.gemstore.gemstone_store.model.CTPhieuMuaHang;
 import com.gemstore.gemstone_store.model.PhieuBanHang;
 import com.gemstore.gemstone_store.model.SanPham;
 import com.gemstore.gemstone_store.model.id.CTPhieuBanHangId;
@@ -27,6 +28,9 @@ public class CTPhieuBanHangServiceImpl implements CTPhieuBanHangService {
     @Autowired
     private PhieuBanHangRepository pbhRepo;
 
+    @Autowired
+    private PhieuBanHangService pbhService;
+
     @Override
     public List<CTPhieuBanHang> getAll() {
         return repo.findAll();
@@ -50,8 +54,13 @@ public class CTPhieuBanHangServiceImpl implements CTPhieuBanHangService {
         ct.setSanPham(sp);
         ct.setPhieuBanHang(pbh);
         ct.setId(new CTPhieuBanHangId(maSP, soPhieuBH));
+        ct.setThanhTien((int)(sp.getDonGia() * ct.getSoLuong() * (1 + sp.getLoaiSanPham().getLoiNhuan()/100)));
 
-        return repo.save(ct);
+        CTPhieuBanHang saved = repo.save(ct);
+
+        pbhService.updateTongTien(soPhieuBH);
+
+        return saved;
     }
 
     @Override

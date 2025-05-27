@@ -1,6 +1,8 @@
 package com.gemstore.gemstone_store.service.impl;
 
+import com.gemstore.gemstone_store.model.CTPhieuMuaHang;
 import com.gemstore.gemstone_store.model.PhieuMuaHang;
+import com.gemstore.gemstone_store.repository.CTPhieuMuaHangRepository;
 import com.gemstore.gemstone_store.repository.PhieuMuaHangRepository;
 import com.gemstore.gemstone_store.service.PhieuMuaHangService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,9 @@ public class PhieuMuaHangServiceImpl implements PhieuMuaHangService {
 
     @Autowired
     private PhieuMuaHangRepository repo;
+
+    @Autowired
+    private CTPhieuMuaHangRepository ctRepo;
 
     @Override
     public List<PhieuMuaHang> getAll() {
@@ -37,5 +42,22 @@ public class PhieuMuaHangServiceImpl implements PhieuMuaHangService {
     @Override
     public void delete(String id) {
         repo.deleteById(id);
+    }
+
+    @Override
+    public void updateTongTien(String soPhieuMH){
+        List<CTPhieuMuaHang> ct = ctRepo.findByPhieuMuaHang_SoPhieuMH(soPhieuMH);
+
+        int tongTien = 0;
+        for(var c : ct){
+            tongTien += c.getThanhTien();
+        }
+
+        Optional<PhieuMuaHang> opt = repo.findById(soPhieuMH);
+        if(opt.isPresent()){
+            PhieuMuaHang pmh = opt.get();
+            pmh.setTongTien(tongTien);
+            repo.save(pmh);
+        }
     }
 }

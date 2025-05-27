@@ -23,6 +23,7 @@ public class CTPhieuDichVu {
     @ManyToOne(fetch = FetchType.LAZY)
     //@JsonIgnoreProperties({"ctPhieuDichVus"})
     @JoinColumn(name = "SoPhieuDV", referencedColumnName = "SoPhieuDV")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @NotNull(message = "Mã phiếu dịch vụ không được để trống")
     private PhieuDichVu phieuDichVu;
 
@@ -30,6 +31,7 @@ public class CTPhieuDichVu {
     @ManyToOne(fetch = FetchType.LAZY)
     //@JsonIgnoreProperties({"ctPhieuDichVus"})
     @JoinColumn(name = "MaLDV", referencedColumnName = "MaLDV")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @NotNull(message = "Mã loại dịch vụ không được để trống")
     private LoaiDichVu loaiDichVu;
 

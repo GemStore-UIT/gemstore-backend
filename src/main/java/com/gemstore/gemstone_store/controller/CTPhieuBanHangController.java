@@ -64,16 +64,6 @@ public class CTPhieuBanHangController {
             return ResponseEntity.badRequest().body("Lỗi: " + errors);
         }
         try {
-
-            PhieuBanHang pbh = phieuBanHangRepository.findById(ct.getPhieuBanHang().getSoPhieuBH())
-                    .orElseThrow(() -> new RuntimeException("Không tìm thấy PhieuBanHang"));
-            SanPham sp = sanPhamRepository.findById(ct.getSanPham().getMaSanPham())
-                    .orElseThrow(() -> new RuntimeException("Không tìm thấy SanPham"));
-
-            ct.setPhieuBanHang(pbh);
-            ct.setSanPham(sp);
-            ct.setId(new CTPhieuBanHangId(ct.getPhieuBanHang().getSoPhieuBH(), ct.getSanPham().getMaSanPham()));
-
             CTPhieuBanHang saved = service.save(ct);
             return ResponseEntity.status(
                     ct.getId() == null ? HttpStatus.CREATED : HttpStatus.OK

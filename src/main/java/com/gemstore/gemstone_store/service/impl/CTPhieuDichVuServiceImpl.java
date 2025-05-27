@@ -73,9 +73,9 @@ public class CTPhieuDichVuServiceImpl implements CTPhieuDichVuService {
             ct.setLoaiDichVu(ldv);
             ct.setId(new CTPhieuDichVuId(soPhieuDV, maLDV));
 
-            phieuDichVuService.updateTongTien(ct.getId().getSoPhieuDV());
-
             CTPhieuDichVu saved = repo.save(ct);
+
+            phieuDichVuService.updateTongTien(soPhieuDV);
 
             return ResponseEntity.status(
                     ct.getId() == null ? HttpStatus.CREATED : HttpStatus.OK

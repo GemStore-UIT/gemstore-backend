@@ -10,4 +10,5 @@ public interface PhieuBanHangService {
     Optional<PhieuBanHang> getById(String id);
     PhieuBanHang save(PhieuBanHang pbh);
     void delete(String id);
+    void updateTongTien(String soPhieuBH);
 }
