@@ -49,4 +49,9 @@ public class DonViTinhServiceImpl implements DonViTinhService {
         repo.deleteById(id);
         log.info("Xóa thành công đơn vị tính với id={}", id);
     }
+
+    @Override
+    public List<DonViTinh> getAllByName(String name){
+        return repo.findByTenDonViContainingIgnoreCase(name);
+    }
 }

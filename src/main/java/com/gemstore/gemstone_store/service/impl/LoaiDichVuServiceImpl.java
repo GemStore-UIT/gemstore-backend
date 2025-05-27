@@ -50,4 +50,9 @@ public class LoaiDichVuServiceImpl implements LoaiDichVuService {
         repo.deleteById(id);
         log.info("Xóa thành công loại dịch vụ với id={}", id);
     }
+
+    @Override
+    public List<LoaiDichVu> getAllByName(String name){
+        return repo.findByTenDichVuContainingIgnoreCase(name);
+    }
 }

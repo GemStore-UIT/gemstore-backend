@@ -12,4 +12,5 @@ public interface SanPhamService {
     SanPham save(SanPham sp);
     void delete(String id);
 
+    List<SanPham> getAllByName(String name);
 }

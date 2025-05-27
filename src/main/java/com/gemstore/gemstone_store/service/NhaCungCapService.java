@@ -14,4 +14,6 @@ public interface NhaCungCapService {
     NhaCungCap save(NhaCungCap ncc);
 
     void delete(String id);
+
+    List<NhaCungCap> getAllByName(String name);
 }
