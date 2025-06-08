@@ -10,12 +10,14 @@ import com.gemstore.gemstone_store.repository.PhieuMuaHangRepository;
 import com.gemstore.gemstone_store.repository.SanPhamRepository;
 import com.gemstore.gemstone_store.service.CTPhieuMuaHangService;
 import com.gemstore.gemstone_store.service.PhieuMuaHangService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class CTPhieuMuaHangServiceImpl implements CTPhieuMuaHangService {
 
@@ -33,16 +35,25 @@ public class CTPhieuMuaHangServiceImpl implements CTPhieuMuaHangService {
 
     @Override
     public List<CTPhieuMuaHang> getAll() {
-        return repo.findAll();
+        log.info("Lấy tất cả chi tiết phiếu mua hàng");
+        List<CTPhieuMuaHang> list = repo.findAll();
+        log.debug("Số lượng chi tiết phiếu mua hàng trả về: {}", list.size());
+        return list;
     }
 
     @Override
     public Optional<CTPhieuMuaHang> getById(CTPhieuMuaHangId id) {
-        return repo.findById(id);
+        log.info("Tìm chi tiết phiếu mua hàng với id={}", id);
+        Optional<CTPhieuMuaHang> ct = repo.findById(id);
+        if (ct.isEmpty()) {
+            log.warn("Không tìm thấy chi tiết phiếu mua hàng với id={}", id);
+        }
+        return ct;
     }
 
     @Override
     public CTPhieuMuaHang save(CTPhieuMuaHang ct) {
+        log.info("Lưu chi tiết phiếu mua hàng: {}", ct);
         String maSP = ct.getSanPham().getMaSanPham();
         String soPhieuMH = ct.getPhieuMuaHang().getSoPhieuMH();
 
@@ -59,11 +70,14 @@ public class CTPhieuMuaHangServiceImpl implements CTPhieuMuaHangService {
 
         pmhService.updateTongTien(soPhieuMH);
 
+        log.info("Lưu chi tiết phiếu mua hàng thành công với id={}", ct.getId());
         return saved;
     }
 
     @Override
     public void delete(CTPhieuMuaHangId id) {
+        log.info("Xóa chi tiết phiếu mua hàng với id={}", id);
         repo.deleteById(id);
+        log.info("Xóa thành công chi tiết phiếu mua hàng với id={}", id);
     }
 }
