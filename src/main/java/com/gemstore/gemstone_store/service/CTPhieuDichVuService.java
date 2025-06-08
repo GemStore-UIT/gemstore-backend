@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface CTPhieuDichVuService {
     List<CTPhieuDichVu> getAll();
     Optional<CTPhieuDichVu> getById(CTPhieuDichVuId id);
-    ResponseEntity<?> save(CTPhieuDichVu ct) throws Exception;
+    CTPhieuDichVu save(CTPhieuDichVu ct);
     void delete(CTPhieuDichVuId id);
 }

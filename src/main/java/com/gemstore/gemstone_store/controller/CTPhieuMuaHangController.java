@@ -10,6 +10,7 @@ import com.gemstore.gemstone_store.service.CTPhieuMuaHangService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.*;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/ctphieumuahang")
 @Tag(name = "Chi tiết phiếu mua hàng", description = "CRUD chi tiết phiếu mua hàng")
@@ -37,61 +39,53 @@ public class CTPhieuMuaHangController {
     @Operation(summary = "Lấy tất cả chi tiết phiếu mua hàng")
     @GetMapping
     public ResponseEntity<?> getAll() {
+        log.info("API GET /api/ctphieumuahang - Lấy tất cả chi tiết phiếu mua hàng");
         List<CTPhieuMuaHang> list = service.getAll();
         if (list.isEmpty()) {
+            log.warn("Không có chi tiết phiếu mua hàng nào.");
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Không có chi tiết phiếu mua hàng nào.");
         }
+        log.debug("Trả về {} chi tiết phiếu mua hàng", list.size());
         return ResponseEntity.ok(list);
     }
 
     @Operation(summary = "Lấy chi tiết phiếu mua hàng theo mã")
     @GetMapping("/{maSP}/{soPhieu}")
     public ResponseEntity<?> getById(@PathVariable String maSP, @PathVariable String soPhieu) {
+        log.info("API GET /api/ctphieumuahang/{}/{} - Tìm chi tiết phiếu mua hàng", maSP, soPhieu);
         CTPhieuMuaHangId id = new CTPhieuMuaHangId(maSP, soPhieu);
         Optional<CTPhieuMuaHang> ct = service.getById(id);
         return ct.<ResponseEntity<?>>map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("Không tìm thấy chi tiết phiếu mua hàng."));
+                .orElseGet(() -> {
+                    log.warn("Không tìm thấy chi tiết phiếu mua hàng với id={}", id);
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                            .body("Không tìm thấy chi tiết phiếu mua hàng.");
+                });
     }
 
     @Operation(summary = "Tạo hoặc cập nhật chi tiết phiếu mua hàng")
     @PostMapping
-    public ResponseEntity<?> createOrUpdate(@Valid @RequestBody CTPhieuMuaHang ct, BindingResult result) {
-        if (result.hasErrors()) {
-            String errors = result.getAllErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.joining(", "));
-            return ResponseEntity.badRequest().body("Lỗi: " + errors);
-        }
-        try {
-
-            PhieuMuaHang pmh = phieuMuaHangRepository.findById(ct.getPhieuMuaHang().getSoPhieuMH())
-                    .orElseThrow(() -> new RuntimeException("Không tìm thấy PhieuMuaHang"));
-            SanPham sp = sanPhamRepository.findById(ct.getSanPham().getMaSanPham())
-                    .orElseThrow(() -> new RuntimeException("Không tìm thấy SanPham"));
-
-            ct.setPhieuMuaHang(pmh);
-            ct.setSanPham(sp);
-            ct.setId(new CTPhieuMuaHangId(ct.getPhieuMuaHang().getSoPhieuMH(), ct.getSanPham().getMaSanPham()));
-
-            CTPhieuMuaHang saved = service.save(ct);
-            return ResponseEntity.status(
-                    ct.getId() == null ? HttpStatus.CREATED : HttpStatus.OK
-            ).body(saved);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Lỗi: " + e.getMessage());
-        }
+    public ResponseEntity<?> createOrUpdate(@Valid @RequestBody CTPhieuMuaHang ct) {
+        log.info("API POST /api/ctphieumuahang - Tạo/cập nhật chi tiết phiếu mua hàng: {}", ct);
+        CTPhieuMuaHang saved = service.save(ct);
+        log.info("Đã lưu chi tiết phiếu mua hàng thành công với id={}", saved.getId());
+        return ResponseEntity.status(
+                ct.getId() == null ? HttpStatus.CREATED : HttpStatus.OK
+        ).body(saved);
     }
 
     @Operation(summary = "Xóa chi tiết phiếu mua hàng theo mã")
     @DeleteMapping("/{maSP}/{soPhieu}")
     public ResponseEntity<?> delete(@PathVariable String maSP, @PathVariable String soPhieu) {
+        log.info("API DELETE /api/ctphieumuahang/{}/{} - Xóa chi tiết phiếu mua hàng", maSP, soPhieu);
         CTPhieuMuaHangId id = new CTPhieuMuaHangId(maSP, soPhieu);
         Optional<CTPhieuMuaHang> ct = service.getById(id);
         if (ct.isEmpty()) {
+            log.warn("Không tìm thấy chi tiết phiếu mua hàng với id={} để xóa.", id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy để xóa.");
         }
         service.delete(id);
+        log.info("Đã xóa chi tiết phiếu mua hàng thành công với id={}", id);
         return ResponseEntity.ok("Xóa thành công.");
     }
 }
