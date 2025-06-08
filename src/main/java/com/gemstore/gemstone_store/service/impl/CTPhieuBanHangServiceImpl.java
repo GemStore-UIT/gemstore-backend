@@ -10,12 +10,14 @@ import com.gemstore.gemstone_store.repository.PhieuBanHangRepository;
 import com.gemstore.gemstone_store.repository.SanPhamRepository;
 import com.gemstore.gemstone_store.service.CTPhieuBanHangService;
 import com.gemstore.gemstone_store.service.PhieuBanHangService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class CTPhieuBanHangServiceImpl implements CTPhieuBanHangService {
 
@@ -33,16 +35,25 @@ public class CTPhieuBanHangServiceImpl implements CTPhieuBanHangService {
 
     @Override
     public List<CTPhieuBanHang> getAll() {
-        return repo.findAll();
+        log.info("Lấy tất cả chi tiết phiếu bán hàng");
+        List<CTPhieuBanHang> list = repo.findAll();
+        log.debug("Số lượng chi tiết phiếu bán hàng trả về: {}", list.size());
+        return list;
     }
 
     @Override
     public Optional<CTPhieuBanHang> getById(CTPhieuBanHangId id) {
-        return repo.findById(id);
+        log.info("Tìm chi tiết phiếu bán hàng với id={}", id);
+        Optional<CTPhieuBanHang> ct = repo.findById(id);
+        if (ct.isEmpty()) {
+            log.warn("Không tìm thấy chi tiết phiếu bán hàng với id={}", id);
+        }
+        return ct;
     }
 
     @Override
     public CTPhieuBanHang save(CTPhieuBanHang ct) {
+        log.info("Lưu chi tiết phiếu bán hàng: {}", ct);
         String maSP = ct.getSanPham().getMaSanPham();
         String soPhieuBH = ct.getPhieuBanHang().getSoPhieuBH();
 
@@ -60,11 +71,14 @@ public class CTPhieuBanHangServiceImpl implements CTPhieuBanHangService {
 
         pbhService.updateTongTien(soPhieuBH);
 
+        log.info("Lưu chi tiết phiếu bán hàng thành công với id={}", ct.getId());
         return saved;
     }
 
     @Override
     public void delete(CTPhieuBanHangId id) {
+        log.info("Xóa chi tiết phiếu bán hàng với id={}", id);
         repo.deleteById(id);
+        log.info("Xóa thành công chi tiết phiếu bán hàng với id={}", id);
     }
 }

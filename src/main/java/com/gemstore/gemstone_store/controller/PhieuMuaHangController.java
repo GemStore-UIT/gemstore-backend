@@ -5,6 +5,7 @@ import com.gemstore.gemstone_store.service.PhieuMuaHangService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/phieumuahang")
 @Tag(name = "Phiếu mua hàng", description = "CRUD phiếu mua hàng")
@@ -27,32 +29,35 @@ public class PhieuMuaHangController {
     @Operation(summary = "Lấy tất cả phiếu mua hàng")
     @GetMapping
     public ResponseEntity<?> getAll() {
+        log.info("API GET /api/phieumuahang - Lấy tất cả phiếu mua hàng");
         List<PhieuMuaHang> list = service.getAll();
         if (list.isEmpty()) {
+            log.warn("Không có phiếu mua hàng nào.");
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Không có phiếu mua hàng nào.");
         }
+        log.debug("Trả về {} phiếu mua hàng", list.size());
         return ResponseEntity.ok(list);
     }
 
     @Operation(summary = "Lấy phiếu mua hàng theo mã")
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable String id) {
+        log.info("API GET /api/phieumuahang/{} - Tìm phiếu mua hàng", id);
         Optional<PhieuMuaHang> pmh = service.getById(id);
         return pmh.<ResponseEntity<?>>map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("Không tìm thấy phiếu mua hàng với mã: " + id));
+                .orElseGet(() -> {
+                    log.warn("Không tìm thấy phiếu mua hàng với id={}", id);
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                            .body("Không tìm thấy phiếu mua hàng với mã: " + id);
+                });
     }
 
     @Operation(summary = "Tạo hoặc cập nhật phiếu mua hàng")
     @PostMapping
-    public ResponseEntity<?> createOrUpdate(@Valid @RequestBody PhieuMuaHang pmh, BindingResult result) {
-        if (result.hasErrors()) {
-            String errors = result.getAllErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.joining(", "));
-            return ResponseEntity.badRequest().body("Lỗi: " + errors);
-        }
+    public ResponseEntity<?> createOrUpdate(@Valid @RequestBody PhieuMuaHang pmh) {
+        log.info("API POST /api/phieumuahang - Tạo/cập nhật phiếu mua hàng: {}", pmh);
         PhieuMuaHang saved = service.save(pmh);
+        log.info("Đã lưu phiếu mua hàng thành công với id={}", saved.getSoPhieuMH());
         return ResponseEntity.status(
                 pmh.getSoPhieuMH() == null ? HttpStatus.CREATED : HttpStatus.OK
         ).body(saved);
@@ -60,13 +65,16 @@ public class PhieuMuaHangController {
 
     @Operation(summary = "Xóa phiếu mua hàng theo mã")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@RequestParam String id) {
+    public ResponseEntity<?> delete(@PathVariable String id) {
+        log.info("API DELETE /api/phieumuahang/{} - Xóa phiếu mua hàng", id);
         Optional<PhieuMuaHang> pmh = service.getById(id);
         if (pmh.isEmpty()) {
+            log.warn("Không tìm thấy phiếu mua hàng với id={} để xóa.", id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Không tìm thấy phiếu mua hàng để xóa.");
         }
         service.delete(id);
+        log.info("Đã xóa phiếu mua hàng thành công với id={}", id);
         return ResponseEntity.ok("Xóa phiếu mua hàng thành công.");
     }
 }
