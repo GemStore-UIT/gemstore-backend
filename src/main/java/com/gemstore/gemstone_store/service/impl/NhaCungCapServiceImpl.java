@@ -49,4 +49,9 @@ public class NhaCungCapServiceImpl implements NhaCungCapService {
         repo.deleteById(id);
         log.info("Xóa thành công nhà cung cấp với id={}", id);
     }
+
+    @Override
+    public List<NhaCungCap> getAllByName(String name){
+        return repo.findByTenNCCContainingIgnoreCase(name);
+    }
 }

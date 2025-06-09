@@ -78,4 +78,14 @@ public class DonViTinhController {
         return ResponseEntity.ok("Xóa đơn vị tính thành công.");
     }
 
+    @Operation(summary = "Tìm đơn vị tính theo tên")
+    @GetMapping("/search")
+    public ResponseEntity<?> searchByTen(@RequestParam String keyword) {
+        List<DonViTinh> result = service.getAllByName(keyword);
+        if (result.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy kết quả nào.");
+        }
+        return ResponseEntity.ok(result);
+    }
+
 }

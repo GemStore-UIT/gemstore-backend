@@ -49,4 +49,9 @@ public class LoaiSanPhamServiceImpl implements LoaiSanPhamService {
         repo.deleteById(id);
         log.info("Xóa thành công loại sản phẩm với id={}", id);
     }
+
+    @Override
+    public List<LoaiSanPham> getAllByName(String name){
+        return repo.findByTenLSPContainingIgnoreCase(name);
+    }
 }

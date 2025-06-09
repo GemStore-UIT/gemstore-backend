@@ -50,4 +50,8 @@ public class SanPhamServiceImpl implements SanPhamService {
         log.info("Xóa thành công sản phẩm với id={}", id);
     }
 
+    @Override
+    public List<SanPham> getAllByName(String name){
+        return repo.findByTenSanPhamContainingIgnoreCase(name);
+    }
 }
