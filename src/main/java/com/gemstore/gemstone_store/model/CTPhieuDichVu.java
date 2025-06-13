@@ -21,46 +21,44 @@ public class CTPhieuDichVu {
 
     @MapsId("soPhieuDV")
     @ManyToOne(fetch = FetchType.LAZY)
-    //@JsonIgnoreProperties({"ctPhieuDichVus"})
-    @JoinColumn(name = "SoPhieuDV", referencedColumnName = "SoPhieuDV")
+    @JoinColumn(name = "sophieudv", referencedColumnName = "sophieudv")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @NotNull(message = "Mã phiếu dịch vụ không được để trống")
     private PhieuDichVu phieuDichVu;
 
     @MapsId("maLDV")
     @ManyToOne(fetch = FetchType.LAZY)
-    //@JsonIgnoreProperties({"ctPhieuDichVus"})
-    @JoinColumn(name = "MaLDV", referencedColumnName = "MaLDV")
+    @JoinColumn(name = "maldv", referencedColumnName = "maldv")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @NotNull(message = "Mã loại dịch vụ không được để trống")
     private LoaiDichVu loaiDichVu;
 
-    @Column(name = "DonGia")
+    @Column(name = "dongia")
     @Min(value = 0, message = "Đơn giá phải lớn hơn 0")
     private int donGia;
 
-    @Column(name = "SoLuong")
+    @Column(name = "soluong")
     @Min(value = 1, message = "Số lượng phải lớn hơn 0")
     private int soLuong;
 
-    @Column(name = "ThanhTien")
+    @Column(name = "thanhtien")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Min(value = 0)
     private int thanhTien;
 
-    @Column(name = "TraTruoc")
+    @Column(name = "tratruoc")
     @Min(value = 0)
     private int traTruoc;
 
-    @Column(name = "ConLai")
+    @Column(name = "conlai")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Min(value = 0)
     private int conLai;
 
-    @Column(name = "NgayGiao")
+    @Column(name = "ngaygiao")
     private LocalDateTime ngayGiao;
 
-    @Column(name = "TinhTrang", length = 10)
+    @Column(name = "tinhtrang", length = 10)
     @Pattern(regexp = "Đã giao|Chưa giao", message = "Tình trạng phải là 'Đã giao' hoặc 'Chưa giao'")
     private String tinhTrang;
 }

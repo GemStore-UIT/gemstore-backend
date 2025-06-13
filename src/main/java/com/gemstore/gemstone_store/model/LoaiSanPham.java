@@ -13,21 +13,21 @@ import lombok.*;
 public class LoaiSanPham {
 
     @Id
-    @Column(name = "MaLSP", length = 20, nullable = false)
+    @Column(name = "malsp", length = 20, nullable = false)
     @NotNull
     @NotBlank(message = "Mã loại sản phẩm không được để trống")
     private String maLSP;
 
-    @Column(name = "TenLSP", length = 50)
+    @Column(name = "tenlsp", length = 50)
     @NotBlank(message = "Tên loại sản phẩm không được để trống")
     private String tenLSP;
 
     @ManyToOne
-    @JoinColumn(name = "DonViTinh", referencedColumnName = "MaDonVi", nullable = false)
+    @JoinColumn(name = "donvitinh", referencedColumnName = "madonvi", nullable = false)
     @NotNull(message = "Đơn vị tính không được để trống")
     private DonViTinh donViTinh;
 
-    @Column(name = "LoiNhuan")
+    @Column(name = "loinhuan")
     @Min(value = 0, message = "Lợi nhuận phải lớn hơn 0")
     private float loiNhuan;
 

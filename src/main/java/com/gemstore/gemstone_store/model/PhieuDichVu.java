@@ -19,44 +19,39 @@ import java.util.Set;
 public class PhieuDichVu {
 
     @Id
-    @Column(name = "SoPhieuDV", length = 20, nullable = false)
+    @Column(name = "sophieudv", length = 20, nullable = false)
     @NotNull
     @NotBlank(message = "Số phiếu dịch vụ không được để trống")
     private String soPhieuDV;
 
-    @Column(name = "NgayLap")
+    @Column(name = "ngaylap")
     private LocalDateTime ngayLap;
 
-    @Column(name = "KhachHang", length = 50)
+    @Column(name = "khachhang", length = 50)
     @NotBlank(message = "Tên khách hàng không được để trống")
     private String khachHang;
 
-    @Column(name = "SDT", length = 20)
+    @Column(name = "sdt", length = 20)
     @NotBlank(message = "SDT không được để trống")
     private String sdt;
 
-    @Column(name = "TongTien")
+    @Column(name = "tongtien")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Min(value = 0)
     private int tongTien;
 
-    @Column(name = "TongTienTraTruoc")
+    @Column(name = "tongtientratruoc")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Min(value = 0)
     private int tongTienTraTruoc;
 
-    @Column(name = "TongTienConLai")
+    @Column(name = "tongtienconlai")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Min(value = 0)
     private int tongTienConLai;
 
-    @Column(name = "TinhTrang", length = 20)
+    @Column(name = "tinhtrang", length = 20)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Pattern(regexp = "Hoàn thành|Chưa hoàn thành", message = "Tình trạng phải là 'Hoàn thành' hoặc 'Chưa hoàn thành'")
     private String tinhTrang;
-
-//    @Column
-//    @OneToMany(mappedBy = "phieuDichVu", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-//    @JsonIgnore
-//    private Set<CTPhieuDichVu> ctphieudichvus = new HashSet<>();
 }

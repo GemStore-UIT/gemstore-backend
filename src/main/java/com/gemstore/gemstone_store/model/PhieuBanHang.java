@@ -17,19 +17,19 @@ import java.time.LocalDateTime;
 public class PhieuBanHang {
 
     @Id
-    @Column(name = "SoPhieuBH", length = 20, nullable = false)
+    @Column(name = "sophieubh", length = 20, nullable = false)
     @NotNull
     @NotBlank(message = "Số phiếu bán hàng không được để trống")
     private String soPhieuBH;
 
-    @Column(name = "NgayLap")
+    @Column(name = "ngaylap")
     private LocalDateTime ngayLap;
 
-    @Column(name = "KhachHang", length = 50)
+    @Column(name = "khachhang", length = 50)
     @NotBlank(message = "Khách hàng không được để trống")
     private String khachHang;
 
-    @Column(name = "TongTien")
+    @Column(name = "tongtien")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Min(value = 0, message = "Tổng tiền phải lớn hơn 0")
     private int tongTien;
