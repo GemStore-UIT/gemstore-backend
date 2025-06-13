@@ -53,6 +53,6 @@ public class LoaiDichVuServiceImpl implements LoaiDichVuService {
 
     @Override
     public List<LoaiDichVu> getAllByName(String name){
-        return repo.findByTenDichVuContainingIgnoreCase(name);
+        return repo.findByTenLDVContainingIgnoreCase(name);
     }
 }
