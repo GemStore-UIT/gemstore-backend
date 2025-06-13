@@ -13,11 +13,11 @@ import lombok.*;
 public class ThamSo {
 
     @Id
-    @Column(name = "TenThamSo", length = 30, nullable = false)
+    @Column(name = "tenthamso", length = 30, nullable = false)
     @NotNull
     @NotBlank(message = "Tên tham số không được để trống")
     private String tenThamSo;
 
-    @Column(name = "GiaTri")
+    @Column(name = "giatri")
     private int giaTri;
 }
