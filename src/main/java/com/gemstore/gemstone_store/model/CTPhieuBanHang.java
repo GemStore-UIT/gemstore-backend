@@ -23,22 +23,22 @@ public class CTPhieuBanHang {
     @MapsId("maSanPham")
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @JoinColumn(name = "MaSanPham", referencedColumnName = "MaSanPham")
+    @JoinColumn(name = "masanpham", referencedColumnName = "masanpham")
     @NotNull(message = "Mã sản phẩm không được để trống")
     private SanPham sanPham;
 
     @MapsId("soPhieuBH")
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @JoinColumn(name = "SoPhieuBH", referencedColumnName = "SoPhieuBH")
+    @JoinColumn(name = "sophieubh", referencedColumnName = "sophieubh")
     @NotNull(message = "Số phiếu bán hàng không được để trống")
     private PhieuBanHang phieuBanHang;
 
-    @Column(name = "SoLuong")
+    @Column(name = "soluong")
     @Min(value = 1, message = "Số lượng phải lớn hơn 0")
     private int soLuong;
 
-    @Column(name = "ThanhTien")
+    @Column(name = "thanhtien")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Min(value = 0, message = "Thành tiền phải lớn hơn hoặc bằng 0")
     private int thanhTien;

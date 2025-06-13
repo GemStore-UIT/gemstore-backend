@@ -17,25 +17,21 @@ import java.util.Set;
 public class LoaiDichVu {
 
     @Id
-    @Column(name = "MaLDV", length = 20, nullable = false)
+    @Column(name = "maldv", length = 20, nullable = false)
     @NotNull
     @NotBlank(message = "Mã loại dịch vụ không được để trống")
     private String maLDV;
 
-    @Column(name = "TenLDV", length = 50)
+    @Column(name = "tenldv", length = 50)
     @NotBlank(message = "Tên loại dịch vụ không được để trống")
     private String tenLDV;
 
-    @Column(name = "DonGia")
+    @Column(name = "dongia")
     @Min(value = 0, message = "Đơn giá phải lớn hơn hoặc bằng 0")
     private int donGia;
 
-    @Column(name = "TraTruoc")
+    @Column(name = "tratruoc")
     @Min(value = 0, message = "Tiền trả trước phải lớn hơn hoặc bằng 0")
     private int traTruoc;
 
-//    @Column
-//    @OneToMany(mappedBy = "loaiDichVu", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-//    @JsonIgnore
-//    private Set<CTPhieuDichVu> ctphieudichvus = new HashSet<>();
 }
