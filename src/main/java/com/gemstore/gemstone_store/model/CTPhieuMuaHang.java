@@ -8,7 +8,9 @@ import com.gemstore.gemstone_store.model.id.CTPhieuMuaHangId;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "CT_PHIEUMUAHANG")

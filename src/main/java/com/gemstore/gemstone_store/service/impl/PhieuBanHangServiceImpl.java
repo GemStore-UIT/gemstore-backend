@@ -4,7 +4,6 @@ import com.gemstore.gemstone_store.dto.request.CTPhieuBanHangRequest;
 import com.gemstore.gemstone_store.dto.request.PhieuBanHangRequest;
 import com.gemstore.gemstone_store.dto.response.PhieuBanHangResponse;
 import com.gemstore.gemstone_store.mapper.PhieuBanHangMapper;
-import com.gemstore.gemstone_store.mapper.PhieuMuaHangMapper;
 import com.gemstore.gemstone_store.model.CTPhieuBanHang;
 import com.gemstore.gemstone_store.model.PhieuBanHang;
 import com.gemstore.gemstone_store.model.SanPham;

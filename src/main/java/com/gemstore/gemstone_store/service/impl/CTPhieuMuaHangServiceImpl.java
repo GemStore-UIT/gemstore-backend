@@ -2,8 +2,6 @@ package com.gemstore.gemstone_store.service.impl;
 
 import com.gemstore.gemstone_store.dto.response.CTPhieuMuaHangResponse;
 import com.gemstore.gemstone_store.mapper.CTPhieuMuaHangMapper;
-import com.gemstore.gemstone_store.mapper.PhieuMuaHangMapper;
-import com.gemstore.gemstone_store.model.CTPhieuBanHang;
 import com.gemstore.gemstone_store.model.CTPhieuMuaHang;
 import com.gemstore.gemstone_store.model.PhieuMuaHang;
 import com.gemstore.gemstone_store.model.SanPham;
