@@ -23,6 +23,7 @@ public class CTPhieuDichVu {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sophieudv", referencedColumnName = "sophieudv")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonBackReference
     @NotNull(message = "Mã phiếu dịch vụ không được để trống")
     private PhieuDichVu phieuDichVu;
 

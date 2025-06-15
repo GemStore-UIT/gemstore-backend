@@ -1,6 +1,8 @@
 package com.gemstore.gemstone_store.controller;
 
+import com.gemstore.gemstone_store.dto.request.PhieuBanHangRequest;
 import com.gemstore.gemstone_store.dto.response.CTPhieuBanHangResponse;
+import com.gemstore.gemstone_store.dto.response.PhieuBanHangResponse;
 import com.gemstore.gemstone_store.model.CTPhieuBanHang;
 import com.gemstore.gemstone_store.model.PhieuBanHang;
 import com.gemstore.gemstone_store.model.SanPham;
@@ -69,7 +71,7 @@ public class CTPhieuBanHangController {
     @GetMapping("/{soPhieu}")
     public ResponseEntity<?> getAllByPhieuBH(@RequestParam UUID soPhieuBH){
         log.info("API GET /api/ctphieubanhang/{} - Tìm tất cả chi tiết của một phiếu bán hàng", soPhieuBH);
-        List<CTPhieuBanHang> cts = service.getAllByPhieuBH(soPhieuBH);
+        List<CTPhieuBanHangResponse> cts = service.getAllByPhieuBH(soPhieuBH);
         if (cts.isEmpty()) {
             log.warn("Không có chi tiết phiếu bán hàng nào.");
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Không có chi tiết phiếu bán hàng nào.");

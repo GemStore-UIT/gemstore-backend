@@ -12,7 +12,7 @@ import java.util.UUID;
 public interface CTPhieuMuaHangService {
     List<CTPhieuMuaHangResponse> getAll();
     Optional<CTPhieuMuaHangResponse> getById(CTPhieuMuaHangId id);
-    List<CTPhieuMuaHang> getAllByPhieuMH(UUID soPhieuMH);
+    List<CTPhieuMuaHangResponse> getAllByPhieuMH(UUID soPhieuMH);
     CTPhieuMuaHang save(CTPhieuMuaHang ct);
     void delete(CTPhieuMuaHangId id);
 }

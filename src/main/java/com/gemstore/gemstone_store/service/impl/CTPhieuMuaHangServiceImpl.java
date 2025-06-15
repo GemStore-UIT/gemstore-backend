@@ -59,13 +59,15 @@ public class CTPhieuMuaHangServiceImpl implements CTPhieuMuaHangService {
     }
 
     @Override
-    public List<CTPhieuMuaHang> getAllByPhieuMH(UUID soPhieuMH){
+    public List<CTPhieuMuaHangResponse> getAllByPhieuMH(UUID soPhieuMH){
         log.info("Tìm chi tiết phiếu bán hàng của phiếu mua hàng {}", soPhieuMH);
         List<CTPhieuMuaHang> cts = repo.findByPhieuMuaHang_SoPhieuMH(soPhieuMH);
         if (cts.isEmpty()) {
             log.warn("Không tìm thấy chi tiết phiếu mua hàng của phiếu {}", soPhieuMH);
         }
-        return cts;
+        return cts.stream()
+                .map(CTPhieuMuaHangMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.gemstore.gemstone_store.controller;
 
+import com.gemstore.gemstone_store.dto.response.PhieuDichVuResponse;
 import com.gemstore.gemstone_store.model.PhieuDichVu;
 import com.gemstore.gemstone_store.service.PhieuDichVuService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,7 +31,7 @@ public class PhieuDichVuController {
     @GetMapping
     public ResponseEntity<?> getAll() {
         log.info("API GET /api/phieudichvu - Lấy tất cả phiếu dịch vụ");
-        List<PhieuDichVu> list = service.getAll();
+        List<PhieuDichVuResponse> list = service.getAll();
         if (list.isEmpty()) {
             log.warn("Không có phiếu dịch vụ nào.");
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Không có phiếu dịch vụ nào.");
@@ -43,7 +44,7 @@ public class PhieuDichVuController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable UUID id) {
         log.info("API GET /api/phieudichvu/{} - Tìm phiếu dịch vụ", id);
-        Optional<PhieuDichVu> pdv = service.getById(id);
+        Optional<PhieuDichVuResponse> pdv = service.getById(id);
         return pdv.<ResponseEntity<?>>map(ResponseEntity::ok)
                 .orElseGet(() -> {
                     log.warn("Không tìm thấy phiếu dịch vụ với id={}", id);
@@ -67,7 +68,7 @@ public class PhieuDichVuController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id) {
         log.info("API DELETE /api/phieudichvu/{} - Xóa phiếu dịch vụ", id);
-        Optional<PhieuDichVu> pdv = service.getById(id);
+        Optional<PhieuDichVuResponse> pdv = service.getById(id);
         if (pdv.isEmpty()) {
             log.warn("Không tìm thấy phiếu dịch vụ với id={} để xóa.", id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND)

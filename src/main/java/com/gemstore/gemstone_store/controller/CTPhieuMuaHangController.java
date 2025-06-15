@@ -72,7 +72,7 @@ public class CTPhieuMuaHangController {
     @GetMapping("/{soPhieu}")
     public ResponseEntity<?> getAllByPhieuMH(@RequestParam UUID soPhieuMH){
         log.info("API GET /api/ctphieumuahang/{} - Tìm tất cả chi tiết của một phiếu mua hàng", soPhieuMH);
-        List<CTPhieuMuaHang> cts = service.getAllByPhieuMH(soPhieuMH);
+        List<CTPhieuMuaHangResponse> cts = service.getAllByPhieuMH(soPhieuMH);
         if (cts.isEmpty()) {
             log.warn("Không có chi tiết phiếu mua hàng nào.");
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Không có chi tiết phiếu mua hàng nào.");

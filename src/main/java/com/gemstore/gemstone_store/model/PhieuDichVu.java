@@ -9,6 +9,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -54,4 +55,8 @@ public class PhieuDichVu {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Pattern(regexp = "Hoàn thành|Chưa hoàn thành", message = "Tình trạng phải là 'Hoàn thành' hoặc 'Chưa hoàn thành'")
     private String tinhTrang;
+
+    @OneToMany(mappedBy = "phieuDichVu", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<CTPhieuDichVu> chiTiet;
 }
