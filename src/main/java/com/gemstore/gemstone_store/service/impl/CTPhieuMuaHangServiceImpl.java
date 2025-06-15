@@ -1,7 +1,6 @@
 package com.gemstore.gemstone_store.service.impl;
 
 import com.gemstore.gemstone_store.model.CTPhieuMuaHang;
-import com.gemstore.gemstone_store.model.PhieuBanHang;
 import com.gemstore.gemstone_store.model.PhieuMuaHang;
 import com.gemstore.gemstone_store.model.SanPham;
 import com.gemstore.gemstone_store.model.id.CTPhieuMuaHangId;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -54,8 +54,8 @@ public class CTPhieuMuaHangServiceImpl implements CTPhieuMuaHangService {
     @Override
     public CTPhieuMuaHang save(CTPhieuMuaHang ct) {
         log.info("Lưu chi tiết phiếu mua hàng: {}", ct);
-        String maSP = ct.getSanPham().getMaSanPham();
-        String soPhieuMH = ct.getPhieuMuaHang().getSoPhieuMH();
+        UUID maSP = ct.getSanPham().getMaSanPham();
+        UUID soPhieuMH = ct.getPhieuMuaHang().getSoPhieuMH();
 
         SanPham sp = spRepo.findById(maSP)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm: " + maSP));

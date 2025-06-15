@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 
 @Embeddable
 @Data
@@ -14,10 +15,10 @@ import java.util.Objects;
 public class CTPhieuDichVuId implements Serializable {
 
     //@Column(name = "SoPhieuDV")
-    private String soPhieuDV;
+    private UUID soPhieuDV;
 
     //@Column(name = "MaLDV")
-    private String maLDV;
+    private UUID maLDV;
 
 //    @Override
 //    public boolean equals(Object o) {

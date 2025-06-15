@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -32,7 +33,7 @@ public class PhieuMuaHangServiceImpl implements PhieuMuaHangService {
     }
 
     @Override
-    public Optional<PhieuMuaHang> getById(String id) {
+    public Optional<PhieuMuaHang> getById(UUID id) {
         log.info("Tìm phiếu mua hàng với id={}", id);
         Optional<PhieuMuaHang> pmh = repo.findById(id);
         if (pmh.isEmpty()) {
@@ -53,14 +54,14 @@ public class PhieuMuaHangServiceImpl implements PhieuMuaHangService {
     }
 
     @Override
-    public void delete(String id) {
+    public void delete(UUID id) {
         log.info("Xóa phiếu mua hàng với id={}", id);
         repo.deleteById(id);
         log.info("Xóa thành công phiếu mua hàng với id={}", id);
     }
 
     @Override
-    public void updateTongTien(String soPhieuMH){
+    public void updateTongTien(UUID soPhieuMH){
         List<CTPhieuMuaHang> ct = ctRepo.findByPhieuMuaHang_SoPhieuMH(soPhieuMH);
 
         int tongTien = 0;

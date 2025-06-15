@@ -5,7 +5,8 @@ import com.gemstore.gemstone_store.model.id.CTPhieuBanHangId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface CTPhieuBanHangRepository extends JpaRepository<CTPhieuBanHang, CTPhieuBanHangId> {
-    List<CTPhieuBanHang> findByPhieuBanHang_SoPhieuBH(String soPhieuBH);
+    List<CTPhieuBanHang> findByPhieuBanHang_SoPhieuBH(UUID soPhieuBH);
 }

@@ -8,6 +8,7 @@ import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "LOAIDICHVU")
@@ -17,10 +18,9 @@ import java.util.Set;
 public class LoaiDichVu {
 
     @Id
+    @GeneratedValue
     @Column(name = "maldv", length = 20, nullable = false)
-    @NotNull
-    @NotBlank(message = "Mã loại dịch vụ không được để trống")
-    private String maLDV;
+    private UUID maLDV;
 
     @Column(name = "tenldv", length = 50)
     @NotBlank(message = "Tên loại dịch vụ không được để trống")

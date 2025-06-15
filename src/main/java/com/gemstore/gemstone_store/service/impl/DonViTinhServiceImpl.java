@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -26,7 +27,7 @@ public class DonViTinhServiceImpl implements DonViTinhService {
     }
 
     @Override
-    public Optional<DonViTinh> getById(String id){
+    public Optional<DonViTinh> getById(UUID id){
         log.info("Tìm đơn vị tính với id={}", id);
         Optional<DonViTinh> dvt = repo.findById(id);
         if (dvt.isEmpty()) {
@@ -44,7 +45,7 @@ public class DonViTinhServiceImpl implements DonViTinhService {
     }
 
     @Override
-    public void delete(String id){
+    public void delete(UUID id){
         log.info("Xóa đơn vị tính với id={}", id);
         repo.deleteById(id);
         log.info("Xóa thành công đơn vị tính với id={}", id);

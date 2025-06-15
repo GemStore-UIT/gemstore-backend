@@ -4,11 +4,12 @@ import com.gemstore.gemstone_store.model.PhieuBanHang;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface PhieuBanHangService {
     List<PhieuBanHang> getAll();
-    Optional<PhieuBanHang> getById(String id);
+    Optional<PhieuBanHang> getById(UUID id);
     PhieuBanHang save(PhieuBanHang pbh);
-    void delete(String id);
-    void updateTongTien(String soPhieuBH);
+    void delete(UUID id);
+    void updateTongTien(UUID soPhieuBH);
 }

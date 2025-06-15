@@ -5,12 +5,13 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 @Embeddable
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class CTPhieuBanHangId implements Serializable {
-    private String maSanPham;
-    private String soPhieuBH;
+    private UUID maSanPham;
+    private UUID soPhieuBH;
 }

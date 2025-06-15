@@ -4,7 +4,8 @@ import com.gemstore.gemstone_store.model.LoaiSanPham;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.UUID;
 
-public interface LoaiSanPhamRepository extends JpaRepository<LoaiSanPham, String> {
+public interface LoaiSanPhamRepository extends JpaRepository<LoaiSanPham, UUID> {
     List<LoaiSanPham> findByTenLSPContainingIgnoreCase(String name);
 }

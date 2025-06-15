@@ -4,12 +4,13 @@ import com.gemstore.gemstone_store.model.LoaiDichVu;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface LoaiDichVuService {
     List<LoaiDichVu> getAll();
-    Optional<LoaiDichVu> getById(String id);
+    Optional<LoaiDichVu> getById(UUID id);
     LoaiDichVu save(LoaiDichVu ldv);
-    void delete(String id);
+    void delete(UUID id);
 
     List<LoaiDichVu> getAllByName(String name);
 }

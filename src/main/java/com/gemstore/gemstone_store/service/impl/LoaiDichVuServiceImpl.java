@@ -1,6 +1,5 @@
 package com.gemstore.gemstone_store.service.impl;
 
-import com.gemstore.gemstone_store.model.DonViTinh;
 import com.gemstore.gemstone_store.model.LoaiDichVu;
 import com.gemstore.gemstone_store.repository.LoaiDichVuRepository;
 import com.gemstore.gemstone_store.service.LoaiDichVuService;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -27,7 +27,7 @@ public class LoaiDichVuServiceImpl implements LoaiDichVuService {
     }
 
     @Override
-    public Optional<LoaiDichVu> getById(String id) {
+    public Optional<LoaiDichVu> getById(UUID id) {
         log.info("Tìm loại dịch vụ với id={}", id);
         Optional<LoaiDichVu> ldv = repo.findById(id);
         if (ldv.isEmpty()) {
@@ -45,7 +45,7 @@ public class LoaiDichVuServiceImpl implements LoaiDichVuService {
     }
 
     @Override
-    public void delete(String id) {
+    public void delete(UUID id) {
         log.info("Xóa loại dịch vụ với id={}", id);
         repo.deleteById(id);
         log.info("Xóa thành công loại dịch vụ với id={}", id);

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -26,7 +27,7 @@ public class NhaCungCapServiceImpl implements NhaCungCapService {
     }
 
     @Override
-    public Optional<NhaCungCap> getById(String id) {
+    public Optional<NhaCungCap> getById(UUID id) {
         log.info("Tìm nhà cung cấp với id={}", id);
         Optional<NhaCungCap> ncc = repo.findById(id);
         if (ncc.isEmpty()) {
@@ -44,7 +45,7 @@ public class NhaCungCapServiceImpl implements NhaCungCapService {
     }
 
     @Override
-    public void delete(String id) {
+    public void delete(UUID id) {
         log.info("Xóa nhà cung cấp với id={}", id);
         repo.deleteById(id);
         log.info("Xóa thành công nhà cung cấp với id={}", id);
