@@ -3,6 +3,7 @@ package com.gemstore.gemstone_store.controller;
 import com.gemstore.gemstone_store.dto.response.CTPhieuBanHangResponse;
 import com.gemstore.gemstone_store.dto.response.CTPhieuMuaHangResponse;
 import com.gemstore.gemstone_store.dto.response.PhieuMuaHangResponse;
+import com.gemstore.gemstone_store.model.CTPhieuBanHang;
 import com.gemstore.gemstone_store.model.CTPhieuMuaHang;
 import com.gemstore.gemstone_store.model.PhieuMuaHang;
 import com.gemstore.gemstone_store.model.SanPham;
@@ -65,6 +66,19 @@ public class CTPhieuMuaHangController {
                     return ResponseEntity.status(HttpStatus.NOT_FOUND)
                             .body("Không tìm thấy chi tiết phiếu mua hàng.");
                 });
+    }
+
+    @Operation(summary = "Lấy tất cả chi tiết của một phiếu mua hàng")
+    @GetMapping("/{soPhieu}")
+    public ResponseEntity<?> getAllByPhieuMH(@RequestParam UUID soPhieuMH){
+        log.info("API GET /api/ctphieumuahang/{} - Tìm tất cả chi tiết của một phiếu mua hàng", soPhieuMH);
+        List<CTPhieuMuaHang> cts = service.getAllByPhieuMH(soPhieuMH);
+        if (cts.isEmpty()) {
+            log.warn("Không có chi tiết phiếu mua hàng nào.");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Không có chi tiết phiếu mua hàng nào.");
+        }
+        log.debug("Trả về {} chi tiết phiếu mua hàng", cts.size());
+        return ResponseEntity.ok(cts);
     }
 
     @Operation(summary = "Tạo hoặc cập nhật chi tiết phiếu mua hàng")

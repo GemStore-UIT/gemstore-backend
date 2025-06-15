@@ -64,6 +64,17 @@ public class CTPhieuDichVuController {
                 });
     }
 
+    @Operation
+    @GetMapping("/{soPhieuDV}")
+    public ResponseEntity<?> getAllByPhieuDV(@RequestParam UUID soPhieuDV){
+        log.info("API GET /api/ctphieudichvu/{}- Tìm tất cả chi tiết của một phiếu dịch vụ", soPhieuDV);
+        List<CTPhieuDichVu> cts = service.getAllByPhieuDV(soPhieuDV);
+        if(cts.isEmpty()){
+            log.warn("Không tìm thấy chi tiết phiếu dịch vụ của phiếu {}", soPhieuDV);
+        }
+        return ResponseEntity.ok(cts);
+    }
+
     @Operation(summary = "Tạo hoặc cập nhật chi tiết phiếu dịch vụ")
     @PostMapping
     public ResponseEntity<?> createOrUpdate(@Valid @RequestBody CTPhieuDichVu ct) {

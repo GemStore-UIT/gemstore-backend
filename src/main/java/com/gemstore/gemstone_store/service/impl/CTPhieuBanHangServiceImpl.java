@@ -58,6 +58,16 @@ public class CTPhieuBanHangServiceImpl implements CTPhieuBanHangService {
     }
 
     @Override
+    public List<CTPhieuBanHang> getAllByPhieuBH(UUID soPhieuBH){
+        log.info("Tìm chi tiết phiếu bán hàng của phiếu bán hàng {}", soPhieuBH);
+        List<CTPhieuBanHang> cts = repo.findByPhieuBanHang_SoPhieuBH(soPhieuBH);
+        if (cts.isEmpty()) {
+            log.warn("Không tìm thấy chi tiết phiếu bán hàng của phiếu {}", soPhieuBH);
+        }
+        return cts;
+    }
+
+    @Override
     public CTPhieuBanHang save(CTPhieuBanHang ct) {
         log.info("Lưu chi tiết phiếu bán hàng: {}", ct);
         UUID maSP = ct.getSanPham().getMaSanPham();
