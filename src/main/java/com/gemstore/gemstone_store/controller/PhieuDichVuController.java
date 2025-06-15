@@ -1,6 +1,9 @@
 package com.gemstore.gemstone_store.controller;
 
+import com.gemstore.gemstone_store.dto.request.PhieuDichVuRequest;
+import com.gemstore.gemstone_store.dto.request.PhieuMuaHangRequest;
 import com.gemstore.gemstone_store.dto.response.PhieuDichVuResponse;
+import com.gemstore.gemstone_store.dto.response.PhieuMuaHangResponse;
 import com.gemstore.gemstone_store.model.PhieuDichVu;
 import com.gemstore.gemstone_store.service.PhieuDichVuService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -62,6 +65,13 @@ public class PhieuDichVuController {
         return ResponseEntity.status(
                 pdv.getSoPhieuDV() == null ? HttpStatus.CREATED : HttpStatus.OK
         ).body(saved);
+    }
+
+    @PostMapping("/full")
+    @Operation(summary = "Tạo phiếu dịch vụ cùng chi tiết")
+    public ResponseEntity<?> createWithCT(@Valid @RequestBody PhieuDichVuRequest req) {
+        PhieuDichVuResponse saved = service.saveWithCT(req);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @Operation(summary = "Xóa phiếu dịch vụ")

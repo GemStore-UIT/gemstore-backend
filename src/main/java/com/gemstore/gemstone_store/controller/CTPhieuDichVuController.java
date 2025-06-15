@@ -67,9 +67,9 @@ public class CTPhieuDichVuController {
     }
 
     @Operation
-    @GetMapping("/{soPhieuDV}")
-    public ResponseEntity<?> getAllByPhieuDV(@RequestParam UUID soPhieuDV){
-        log.info("API GET /api/ctphieudichvu/{}- Tìm tất cả chi tiết của một phiếu dịch vụ", soPhieuDV);
+    @GetMapping("/by-phieudichvu/{soPhieuDV}")
+    public ResponseEntity<?> getAllByPhieuDV(@PathVariable UUID soPhieuDV){
+        log.info("API GET /api/ctphieudichvu//by-phieudichvu/{}- Tìm tất cả chi tiết của một phiếu dịch vụ", soPhieuDV);
         List<CTPhieuDichVuResponse> cts = service.getAllByPhieuDV(soPhieuDV);
         if(cts.isEmpty()){
             log.warn("Không tìm thấy chi tiết phiếu dịch vụ của phiếu {}", soPhieuDV);

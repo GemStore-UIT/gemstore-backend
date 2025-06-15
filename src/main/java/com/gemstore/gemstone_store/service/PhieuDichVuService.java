@@ -1,8 +1,6 @@
 package com.gemstore.gemstone_store.service;
 
-import com.gemstore.gemstone_store.dto.request.PhieuBanHangRequest;
 import com.gemstore.gemstone_store.dto.request.PhieuDichVuRequest;
-import com.gemstore.gemstone_store.dto.response.PhieuBanHangResponse;
 import com.gemstore.gemstone_store.dto.response.PhieuDichVuResponse;
 import com.gemstore.gemstone_store.model.PhieuDichVu;
 
