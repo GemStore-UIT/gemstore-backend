@@ -75,6 +75,8 @@ public class PhieuDichVuServiceImpl implements PhieuDichVuService {
         pdv.setKhachHang(req.getKhachHang());
         pdv.setSdt(req.getSdt());
 
+        pdv = repo.save(pdv);
+
         List<CTPhieuDichVu> ctList = new ArrayList<>();
         int tongTien = 0, tongTraTruoc = 0, tongConLai = 0;
 
@@ -84,10 +86,12 @@ public class PhieuDichVuServiceImpl implements PhieuDichVuService {
             LoaiDichVu ldv = ldvRepo.findById(ctReq.getMaLDV())
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy loại dịch vụ: " + ctReq.getMaLDV()));
 
+            int donGia = ldv.getDonGia();
             ct.setLoaiDichVu(ldv);
-            ct.setDonGia(ctReq.getDonGia());
+            ct.setDonGia(donGia);
             ct.setSoLuong(ctReq.getSoLuong());
-            int thanhTien = ctReq.getDonGia() * ctReq.getSoLuong();
+
+            int thanhTien = donGia * ctReq.getSoLuong();
             ct.setThanhTien(thanhTien);
             ct.setTraTruoc(ctReq.getTraTruoc());
             ct.setConLai(thanhTien - ctReq.getTraTruoc());
@@ -107,6 +111,10 @@ public class PhieuDichVuServiceImpl implements PhieuDichVuService {
         pdv.setTongTien(tongTien);
         pdv.setTongTienTraTruoc(tongTraTruoc);
         pdv.setTongTienConLai(tongConLai);
+
+        boolean isHoanThanh = ctList.stream()
+                .allMatch(ct -> "Đã giao".equals(ct.getTinhTrang()));
+        pdv.setTinhTrang(isHoanThanh ? "Hoàn thành" : "Chưa hoàn thành");
 
         repo.save(pdv);
 
