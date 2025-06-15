@@ -55,6 +55,16 @@ public class CTPhieuDichVuServiceImpl implements CTPhieuDichVuService {
     }
 
     @Override
+    public List<CTPhieuDichVu> getAllByPhieuDV(UUID soPhieuDV){
+        log.info("Tìm tất cả chi tiết của phiếu dịch vụ {}", soPhieuDV);
+        List<CTPhieuDichVu> cts = repo.findByPhieuDichVu_SoPhieuDV(soPhieuDV);
+        if(cts.isEmpty()){
+            log.warn("Không tìm thấy chi tiết phiếu dịch vụ của phiếu {}", soPhieuDV);
+        }
+        return cts;
+    }
+
+    @Override
     @Transactional
     public CTPhieuDichVu save(CTPhieuDichVu ct) {
         log.info("Lưu chi tiết phiếu dịch vụ: {}", ct);
