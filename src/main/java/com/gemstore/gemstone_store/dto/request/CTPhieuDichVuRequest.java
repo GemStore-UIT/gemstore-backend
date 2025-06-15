@@ -7,10 +7,10 @@ import java.util.UUID;
 
 @Data
 public class CTPhieuDichVuRequest {
+    private UUID soPhieuDV;
     private UUID maLDV;
-    private int donGia;
-    private int soLuong;
-    private int traTruoc;
+    private Integer soLuong;
+    private Integer traTruoc;
     private LocalDateTime ngayGiao;
     private String tinhTrang;
 }

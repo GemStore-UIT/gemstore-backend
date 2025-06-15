@@ -31,6 +31,6 @@ public class LoaiDichVu {
 
     @Column(name = "tratruoc")
     @Min(value = 0, message = "Tiền trả trước phải lớn hơn hoặc bằng 0")
-    private int traTruoc;
+    private float traTruoc;
 
 }

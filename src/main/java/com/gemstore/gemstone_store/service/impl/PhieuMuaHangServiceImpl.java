@@ -79,7 +79,10 @@ public class PhieuMuaHangServiceImpl implements PhieuMuaHangService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy NCC"));
         pmh.setNhaCungCap(ncc);
 
+        pmh = repo.save(pmh);
+
         List<CTPhieuMuaHang> ctList = new ArrayList<>();
+        int tongTien = 0;
         for (CTPhieuMuaHangRequest ctReq : req.getChiTiet()) {
             CTPhieuMuaHang ct = new CTPhieuMuaHang();
 
@@ -90,14 +93,16 @@ public class PhieuMuaHangServiceImpl implements PhieuMuaHangService {
             ct.setSoLuong(ctReq.getSoLuong());
             ct.setPhieuMuaHang(pmh);
 
-            ct.setThanhTien(sp.getDonGia() * ct.getSoLuong());
+            int thanhTien = sp.getDonGia() * ct.getSoLuong();
+            ct.setThanhTien(thanhTien);
+            tongTien += thanhTien;
 
-            CTPhieuMuaHangId id = new CTPhieuMuaHangId(sp.getMaSanPham(), pmh.getSoPhieuMH());
-            ct.setId(id);
+            ct.setId(new CTPhieuMuaHangId(sp.getMaSanPham(), pmh.getSoPhieuMH()));
 
             ctList.add(ct);
         }
         pmh.setChiTiet(ctList);
+        pmh.setTongTien(tongTien);
 
         repo.save(pmh);
 

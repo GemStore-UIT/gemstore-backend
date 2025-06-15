@@ -1,5 +1,6 @@
 package com.gemstore.gemstone_store.service.impl;
 
+import com.gemstore.gemstone_store.dto.request.CTPhieuDichVuRequest;
 import com.gemstore.gemstone_store.dto.response.CTPhieuDichVuResponse;
 import com.gemstore.gemstone_store.mapper.CTPhieuDichVuMapper;
 import com.gemstore.gemstone_store.model.CTPhieuDichVu;
@@ -71,41 +72,68 @@ public class CTPhieuDichVuServiceImpl implements CTPhieuDichVuService {
 
     @Override
     @Transactional
-    public CTPhieuDichVu save(CTPhieuDichVu ct) {
-        log.info("Lưu chi tiết phiếu dịch vụ: {}", ct);
-        UUID soPhieuDV = ct.getPhieuDichVu().getSoPhieuDV();
-        UUID maLDV = ct.getLoaiDichVu().getMaLDV();
+    public CTPhieuDichVuResponse save(CTPhieuDichVuRequest ctReq) {
+        log.info("Lưu/Update chi tiết phiếu dịch vụ: {}", ctReq);
+        UUID soPhieuDV = ctReq.getSoPhieuDV();
+        UUID maLDV = ctReq.getMaLDV();
 
-        PhieuDichVu pdv = pdvRepo.findById(soPhieuDV).
-                orElseThrow(() -> new RuntimeException("Không tìm thấy phiếu dịch vụ: " + soPhieuDV));
-        LoaiDichVu ldv = ldvRepo.findById(maLDV).
-                orElseThrow(() -> new RuntimeException("Không tìm thấy LoaiDichVu: " + maLDV));
+        if (soPhieuDV == null || maLDV == null)
+            throw new IllegalArgumentException("Thiếu mã phiếu dịch vụ hoặc mã loại dịch vụ!");
+
+        PhieuDichVu pdv = pdvRepo.findById(soPhieuDV)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy phiếu dịch vụ: " + soPhieuDV));
+        LoaiDichVu ldv = ldvRepo.findById(maLDV)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy LoaiDichVu: " + maLDV));
 
         int donGia = ldv.getDonGia();
-        int tyLeTraTruoc = ldv.getTraTruoc();
+        float tyLeTraTruoc = ldv.getTraTruoc();
+
+        CTPhieuDichVu ct = repo.findById(new CTPhieuDichVuId(soPhieuDV, maLDV)).orElse(null);
+
+        boolean isNew = false;
+        if (ct == null) {
+            ct = new CTPhieuDichVu();
+            ct.setId(new CTPhieuDichVuId(soPhieuDV, maLDV));
+            ct.setPhieuDichVu(pdv);
+            ct.setLoaiDichVu(ldv);
+            isNew = true;
+        }
+
+        if (isNew && (ctReq.getSoLuong() == null || ctReq.getTraTruoc() == null))
+            throw new IllegalArgumentException("Tạo mới cần có số lượng và trả trước");
+
+        if (ctReq.getSoLuong() != null) ct.setSoLuong(ctReq.getSoLuong());
+        if (ctReq.getTraTruoc() != null) ct.setTraTruoc(ctReq.getTraTruoc());
+        if (ctReq.getNgayGiao() != null) ct.setNgayGiao(ctReq.getNgayGiao());
+        if (ctReq.getTinhTrang() != null) ct.setTinhTrang(ctReq.getTinhTrang());
+
+        if (ct.getSoLuong() == null) throw new IllegalArgumentException("Thiếu số lượng");
+        if (ct.getTraTruoc() == null) throw new IllegalArgumentException("Thiếu trả trước");
 
         int thanhTien = donGia * ct.getSoLuong();
         int traTruoc = ct.getTraTruoc();
 
-        if (traTruoc < (thanhTien * tyLeTraTruoc / 100)) {
-            throw new IllegalArgumentException("Số tiền trả trước không đủ tối thiểu " + tyLeTraTruoc + "%");
+        int minTraTruoc = Math.round(thanhTien * tyLeTraTruoc / 100f);
+        if (traTruoc < minTraTruoc) {
+            throw new IllegalArgumentException("Số tiền trả trước phải tối thiểu " + tyLeTraTruoc + "% (≥ " + minTraTruoc + ")");
+        }
+        if (traTruoc > thanhTien) {
+            throw new IllegalArgumentException("Số tiền trả trước không được vượt quá thành tiền (" + thanhTien + ")");
         }
 
         ct.setDonGia(donGia);
         ct.setThanhTien(thanhTien);
         ct.setConLai(thanhTien - traTruoc);
 
-        ct.setPhieuDichVu(pdv);
-        ct.setLoaiDichVu(ldv);
-        ct.setId(new CTPhieuDichVuId(soPhieuDV, maLDV));
-
         CTPhieuDichVu saved = repo.save(ct);
 
         phieuDichVuService.updateTongTien(soPhieuDV);
 
         log.info("Lưu chi tiết phiếu dịch vụ thành công với id={}", ct.getId());
-        return saved;
+        return CTPhieuDichVuMapper.toDto(saved);
     }
+
+
 
     @Override
     public void delete(CTPhieuDichVuId id) {

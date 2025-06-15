@@ -6,9 +6,9 @@ import com.gemstore.gemstone_store.model.CTPhieuDichVu;
 public class CTPhieuDichVuMapper {
     public static CTPhieuDichVuResponse toDto(CTPhieuDichVu ct) {
         CTPhieuDichVuResponse dto = new CTPhieuDichVuResponse();
-        dto.setSoPhieuDichVu(ct.getPhieuDichVu().getSoPhieuDV());
+        dto.setSoPhieuDV(ct.getPhieuDichVu().getSoPhieuDV());
         dto.setMaLDV(ct.getLoaiDichVu().getMaLDV());
-        dto.setTenLoaiDichVu(ct.getLoaiDichVu().getTenLDV());
+        dto.setTenLDV(ct.getLoaiDichVu().getTenLDV());
         dto.setDonGia(ct.getDonGia());
         dto.setSoLuong(ct.getSoLuong());
         dto.setThanhTien(ct.getThanhTien());

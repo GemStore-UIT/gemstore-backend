@@ -7,13 +7,13 @@ import java.util.UUID;
 
 @Data
 public class CTPhieuDichVuResponse {
-    private UUID soPhieuDichVu;
+    private UUID soPhieuDV;
     private UUID maLDV;
-    private String tenLoaiDichVu;
+    private String tenLDV;
     private int donGia;
     private int soLuong;
-    private int thanhTien;
     private int traTruoc;
+    private int thanhTien;
     private int conLai;
     private LocalDateTime ngayGiao;
     private String tinhTrang;

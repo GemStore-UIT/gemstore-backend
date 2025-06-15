@@ -75,6 +75,8 @@ public class PhieuDichVuServiceImpl implements PhieuDichVuService {
         pdv.setKhachHang(req.getKhachHang());
         pdv.setSdt(req.getSdt());
 
+        pdv = repo.save(pdv);
+
         List<CTPhieuDichVu> ctList = new ArrayList<>();
         int tongTien = 0, tongTraTruoc = 0, tongConLai = 0;
 
@@ -84,10 +86,23 @@ public class PhieuDichVuServiceImpl implements PhieuDichVuService {
             LoaiDichVu ldv = ldvRepo.findById(ctReq.getMaLDV())
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy loại dịch vụ: " + ctReq.getMaLDV()));
 
+            int donGia = ldv.getDonGia();
+            float tyLeTraTruoc = ldv.getTraTruoc();
+            int thanhTien = donGia * ctReq.getSoLuong();
+            int traTruoc = ctReq.getTraTruoc();
+
+            int minTraTruoc = (int)Math.ceil(thanhTien * tyLeTraTruoc / 100f);
+            if (traTruoc < minTraTruoc) {
+                throw new IllegalArgumentException("Trả trước của dịch vụ ["+ldv.getTenLDV()+"] phải tối thiểu " + tyLeTraTruoc + "% (≥ " + minTraTruoc + ")");
+            }
+            if (traTruoc > thanhTien) {
+                throw new IllegalArgumentException("Trả trước của dịch vụ ["+ldv.getTenLDV()+"] không vượt quá thành tiền (" + thanhTien + ")");
+            }
+
             ct.setLoaiDichVu(ldv);
-            ct.setDonGia(ctReq.getDonGia());
+            ct.setDonGia(donGia);
             ct.setSoLuong(ctReq.getSoLuong());
-            int thanhTien = ctReq.getDonGia() * ctReq.getSoLuong();
+
             ct.setThanhTien(thanhTien);
             ct.setTraTruoc(ctReq.getTraTruoc());
             ct.setConLai(thanhTien - ctReq.getTraTruoc());
@@ -107,6 +122,10 @@ public class PhieuDichVuServiceImpl implements PhieuDichVuService {
         pdv.setTongTien(tongTien);
         pdv.setTongTienTraTruoc(tongTraTruoc);
         pdv.setTongTienConLai(tongConLai);
+
+        boolean isHoanThanh = ctList.stream()
+                .allMatch(ct -> "Đã giao".equals(ct.getTinhTrang()));
+        pdv.setTinhTrang(isHoanThanh ? "Hoàn thành" : "Chưa hoàn thành");
 
         repo.save(pdv);
 

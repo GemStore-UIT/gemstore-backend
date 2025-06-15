@@ -47,7 +47,7 @@ public class CTPhieuDichVu {
 
     @Column(name = "soluong")
     @Min(value = 1, message = "Số lượng phải lớn hơn 0")
-    private int soLuong;
+    private Integer soLuong;
 
     @Column(name = "thanhtien")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -56,7 +56,7 @@ public class CTPhieuDichVu {
 
     @Column(name = "tratruoc")
     @Min(value = 0)
-    private int traTruoc;
+    private Integer traTruoc;
 
     @Column(name = "conlai")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

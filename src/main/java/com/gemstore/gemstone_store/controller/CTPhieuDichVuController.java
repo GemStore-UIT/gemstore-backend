@@ -1,5 +1,6 @@
 package com.gemstore.gemstone_store.controller;
 
+import com.gemstore.gemstone_store.dto.request.CTPhieuDichVuRequest;
 import com.gemstore.gemstone_store.dto.response.CTPhieuDichVuResponse;
 import com.gemstore.gemstone_store.model.CTPhieuDichVu;
 import com.gemstore.gemstone_store.model.id.CTPhieuDichVuId;
@@ -74,13 +75,11 @@ public class CTPhieuDichVuController {
 
     @Operation(summary = "Tạo hoặc cập nhật chi tiết phiếu dịch vụ")
     @PostMapping
-    public ResponseEntity<?> createOrUpdate(@Valid @RequestBody CTPhieuDichVu ct) {
+    public ResponseEntity<?> createOrUpdate(@Valid @RequestBody CTPhieuDichVuRequest ct) {
         log.info("API POST /api/ctphieudichvu - Tạo/cập nhật chi tiết phiếu dịch vụ: {}", ct);
-        CTPhieuDichVu saved = service.save(ct);
-        log.info("Đã lưu chi tiết phiếu dịch vụ thành công với id={}", saved.getId());
-        return ResponseEntity.status(
-                ct.getId() == null ? HttpStatus.CREATED : HttpStatus.OK
-        ).body(saved);
+        CTPhieuDichVuResponse saved = service.save(ct);
+        log.info("Đã lưu chi tiết phiếu dịch vụ thành công với soPhieuDV={}, maLDV={}", saved.getSoPhieuDV(), saved.getMaLDV());
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @Operation(summary = "Xóa chi tiết phiếu dịch vụ")
