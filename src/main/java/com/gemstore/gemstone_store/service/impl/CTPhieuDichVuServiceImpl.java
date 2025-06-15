@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -57,8 +58,8 @@ public class CTPhieuDichVuServiceImpl implements CTPhieuDichVuService {
     @Transactional
     public CTPhieuDichVu save(CTPhieuDichVu ct) {
         log.info("Lưu chi tiết phiếu dịch vụ: {}", ct);
-        String soPhieuDV = ct.getPhieuDichVu().getSoPhieuDV();
-        String maLDV = ct.getLoaiDichVu().getMaLDV();
+        UUID soPhieuDV = ct.getPhieuDichVu().getSoPhieuDV();
+        UUID maLDV = ct.getLoaiDichVu().getMaLDV();
 
         PhieuDichVu pdv = pdvRepo.findById(soPhieuDV).
                 orElseThrow(() -> new RuntimeException("Không tìm thấy phiếu dịch vụ: " + soPhieuDV));

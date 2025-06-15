@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -54,8 +55,8 @@ public class CTPhieuBanHangServiceImpl implements CTPhieuBanHangService {
     @Override
     public CTPhieuBanHang save(CTPhieuBanHang ct) {
         log.info("Lưu chi tiết phiếu bán hàng: {}", ct);
-        String maSP = ct.getSanPham().getMaSanPham();
-        String soPhieuBH = ct.getPhieuBanHang().getSoPhieuBH();
+        UUID maSP = ct.getSanPham().getMaSanPham();
+        UUID soPhieuBH = ct.getPhieuBanHang().getSoPhieuBH();
 
         SanPham sp = spRepo.findById(maSP)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm: " + maSP));

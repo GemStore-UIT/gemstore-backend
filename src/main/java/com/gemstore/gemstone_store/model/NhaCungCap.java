@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "NHACUNGCAP")
 @Data
@@ -12,10 +14,9 @@ import lombok.*;
 public class NhaCungCap {
 
     @Id
+    @GeneratedValue
     @Column(name = "mancc", length = 20, nullable = false)
-    @NotNull
-    @NotBlank(message = "Mã nhà cung cấp không được để trống")
-    private String maNCC;
+    private UUID maNCC;
 
     @Column(name = "tenncc", length = 50)
     @NotBlank(message = "Tên nhà cung cấp không được để trống")

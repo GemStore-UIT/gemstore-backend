@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -26,7 +27,7 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
-    public Optional<SanPham> getById(String id) {
+    public Optional<SanPham> getById(UUID id) {
         log.info("Tìm sản phẩm với id={}", id);
         Optional<SanPham> sp = repo.findById(id);
         if (sp.isEmpty()) {
@@ -44,7 +45,7 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
-    public void delete(String id) {
+    public void delete(UUID id) {
         log.info("Xóa sản phẩm với id={}", id);
         repo.deleteById(id);
         log.info("Xóa thành công sản phẩm với id={}", id);

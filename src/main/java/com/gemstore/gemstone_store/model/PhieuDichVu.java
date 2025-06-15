@@ -10,6 +10,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "PHIEUDICHVU")
@@ -19,10 +20,9 @@ import java.util.Set;
 public class PhieuDichVu {
 
     @Id
+    @GeneratedValue
     @Column(name = "sophieudv", length = 20, nullable = false)
-    @NotNull
-    @NotBlank(message = "Số phiếu dịch vụ không được để trống")
-    private String soPhieuDV;
+    private UUID soPhieuDV;
 
     @Column(name = "ngaylap")
     private LocalDateTime ngayLap;

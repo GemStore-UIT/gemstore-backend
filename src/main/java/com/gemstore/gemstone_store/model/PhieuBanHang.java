@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "PHIEUBANHANG")
@@ -17,10 +18,9 @@ import java.time.LocalDateTime;
 public class PhieuBanHang {
 
     @Id
+    @GeneratedValue
     @Column(name = "sophieubh", length = 20, nullable = false)
-    @NotNull
-    @NotBlank(message = "Số phiếu bán hàng không được để trống")
-    private String soPhieuBH;
+    private UUID soPhieuBH;
 
     @Column(name = "ngaylap")
     private LocalDateTime ngayLap;

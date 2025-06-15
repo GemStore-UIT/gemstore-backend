@@ -7,12 +7,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 @Embeddable
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class CTPhieuMuaHangId implements Serializable {
-    private String maSanPham;
-    private String soPhieuMH;
+    private UUID maSanPham;
+    private UUID soPhieuMH;
 }
