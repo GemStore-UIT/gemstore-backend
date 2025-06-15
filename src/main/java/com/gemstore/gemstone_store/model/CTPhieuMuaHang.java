@@ -1,5 +1,6 @@
 package com.gemstore.gemstone_store.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,6 +31,7 @@ public class CTPhieuMuaHang {
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("soPhieuMH")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonBackReference
     @JoinColumn(name = "sophieumh", referencedColumnName = "sophieumh")
     @NotNull(message = "Số phiếu mua hàng không được để trống")
     private PhieuMuaHang phieuMuaHang;

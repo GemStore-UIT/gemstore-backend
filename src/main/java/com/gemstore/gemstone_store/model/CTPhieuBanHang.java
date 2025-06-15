@@ -1,8 +1,6 @@
 package com.gemstore.gemstone_store.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.gemstore.gemstone_store.model.id.CTPhieuBanHangId;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -30,6 +28,7 @@ public class CTPhieuBanHang {
     @MapsId("soPhieuBH")
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonBackReference
     @JoinColumn(name = "sophieubh", referencedColumnName = "sophieubh")
     @NotNull(message = "Số phiếu bán hàng không được để trống")
     private PhieuBanHang phieuBanHang;

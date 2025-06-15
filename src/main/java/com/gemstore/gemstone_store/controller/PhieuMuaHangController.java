@@ -1,5 +1,9 @@
 package com.gemstore.gemstone_store.controller;
 
+import com.gemstore.gemstone_store.dto.request.PhieuBanHangRequest;
+import com.gemstore.gemstone_store.dto.request.PhieuMuaHangRequest;
+import com.gemstore.gemstone_store.dto.response.PhieuMuaHangResponse;
+import com.gemstore.gemstone_store.model.PhieuBanHang;
 import com.gemstore.gemstone_store.model.PhieuMuaHang;
 import com.gemstore.gemstone_store.service.PhieuMuaHangService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,7 +35,7 @@ public class PhieuMuaHangController {
     @GetMapping
     public ResponseEntity<?> getAll() {
         log.info("API GET /api/phieumuahang - Lấy tất cả phiếu mua hàng");
-        List<PhieuMuaHang> list = service.getAll();
+        List<PhieuMuaHangResponse> list = service.getAll();
         if (list.isEmpty()) {
             log.warn("Không có phiếu mua hàng nào.");
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Không có phiếu mua hàng nào.");
@@ -44,7 +48,7 @@ public class PhieuMuaHangController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable UUID id) {
         log.info("API GET /api/phieumuahang/{} - Tìm phiếu mua hàng", id);
-        Optional<PhieuMuaHang> pmh = service.getById(id);
+        Optional<PhieuMuaHangResponse> pmh = service.getById(id);
         return pmh.<ResponseEntity<?>>map(ResponseEntity::ok)
                 .orElseGet(() -> {
                     log.warn("Không tìm thấy phiếu mua hàng với id={}", id);
@@ -64,11 +68,18 @@ public class PhieuMuaHangController {
         ).body(saved);
     }
 
+    @PostMapping("/full")
+    @Operation(summary = "Tạo phiếu bán hàng cùng chi tiết")
+    public ResponseEntity<?> createWithCT(@Valid @RequestBody PhieuMuaHangRequest req) {
+        PhieuMuaHangResponse saved = service.saveWithCT(req);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+    }
+
     @Operation(summary = "Xóa phiếu mua hàng theo mã")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id) {
         log.info("API DELETE /api/phieumuahang/{} - Xóa phiếu mua hàng", id);
-        Optional<PhieuMuaHang> pmh = service.getById(id);
+        Optional<PhieuMuaHangResponse> pmh = service.getById(id);
         if (pmh.isEmpty()) {
             log.warn("Không tìm thấy phiếu mua hàng với id={} để xóa.", id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND)

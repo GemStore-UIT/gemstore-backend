@@ -1,5 +1,8 @@
 package com.gemstore.gemstone_store.controller;
 
+import com.gemstore.gemstone_store.dto.response.CTPhieuBanHangResponse;
+import com.gemstore.gemstone_store.dto.response.CTPhieuMuaHangResponse;
+import com.gemstore.gemstone_store.dto.response.PhieuMuaHangResponse;
 import com.gemstore.gemstone_store.model.CTPhieuMuaHang;
 import com.gemstore.gemstone_store.model.PhieuMuaHang;
 import com.gemstore.gemstone_store.model.SanPham;
@@ -41,7 +44,7 @@ public class CTPhieuMuaHangController {
     @GetMapping
     public ResponseEntity<?> getAll() {
         log.info("API GET /api/ctphieumuahang - Lấy tất cả chi tiết phiếu mua hàng");
-        List<CTPhieuMuaHang> list = service.getAll();
+        List<CTPhieuMuaHangResponse> list = service.getAll();
         if (list.isEmpty()) {
             log.warn("Không có chi tiết phiếu mua hàng nào.");
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Không có chi tiết phiếu mua hàng nào.");
@@ -55,7 +58,7 @@ public class CTPhieuMuaHangController {
     public ResponseEntity<?> getById(@PathVariable UUID maSP, @PathVariable UUID soPhieu) {
         log.info("API GET /api/ctphieumuahang/{}/{} - Tìm chi tiết phiếu mua hàng", maSP, soPhieu);
         CTPhieuMuaHangId id = new CTPhieuMuaHangId(maSP, soPhieu);
-        Optional<CTPhieuMuaHang> ct = service.getById(id);
+        Optional<CTPhieuMuaHangResponse> ct = service.getById(id);
         return ct.<ResponseEntity<?>>map(ResponseEntity::ok)
                 .orElseGet(() -> {
                     log.warn("Không tìm thấy chi tiết phiếu mua hàng với id={}", id);
@@ -80,7 +83,7 @@ public class CTPhieuMuaHangController {
     public ResponseEntity<?> delete(@PathVariable UUID maSP, @PathVariable UUID soPhieu) {
         log.info("API DELETE /api/ctphieumuahang/{}/{} - Xóa chi tiết phiếu mua hàng", maSP, soPhieu);
         CTPhieuMuaHangId id = new CTPhieuMuaHangId(maSP, soPhieu);
-        Optional<CTPhieuMuaHang> ct = service.getById(id);
+        Optional<CTPhieuMuaHangResponse> ct = service.getById(id);
         if (ct.isEmpty()) {
             log.warn("Không tìm thấy chi tiết phiếu mua hàng với id={} để xóa.", id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy để xóa.");

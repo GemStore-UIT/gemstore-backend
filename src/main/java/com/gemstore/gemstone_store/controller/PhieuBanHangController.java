@@ -1,5 +1,7 @@
 package com.gemstore.gemstone_store.controller;
 
+import com.gemstore.gemstone_store.dto.request.PhieuBanHangRequest;
+import com.gemstore.gemstone_store.dto.response.PhieuBanHangResponse;
 import com.gemstore.gemstone_store.model.PhieuBanHang;
 import com.gemstore.gemstone_store.service.PhieuBanHangService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +29,7 @@ public class PhieuBanHangController {
     @GetMapping
     public ResponseEntity<?> getAll() {
         log.info("API GET /api/phieubanhang - Lấy tất cả phiếu bán hàng");
-        List<PhieuBanHang> list = service.getAll();
+        List<PhieuBanHangResponse> list = service.getAll();
         if (list.isEmpty()) {
             log.warn("Không có phiếu bán hàng nào.");
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Không có phiếu bán hàng nào.");
@@ -40,7 +42,7 @@ public class PhieuBanHangController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable UUID id) {
         log.info("API GET /api/phieubanhang/{} - Tìm phiếu bán hàng", id);
-        Optional<PhieuBanHang> pbh = service.getById(id);
+        Optional<PhieuBanHangResponse> pbh = service.getById(id);
         return pbh.<ResponseEntity<?>>map(ResponseEntity::ok)
                 .orElseGet(() -> {
                     log.warn("Không tìm thấy phiếu bán hàng với id={}", id);
@@ -60,11 +62,18 @@ public class PhieuBanHangController {
         ).body(saved);
     }
 
+    @PostMapping("/full")
+    @Operation(summary = "Tạo phiếu bán hàng cùng chi tiết")
+    public ResponseEntity<?> createWithCT(@Valid @RequestBody PhieuBanHangRequest req) {
+        PhieuBanHangResponse saved = service.saveWithCT(req);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+    }
+
     @DeleteMapping("/{id}")
     @Operation(summary = "Xóa phiếu bán hàng theo mã")
     public ResponseEntity<?> delete(@PathVariable UUID id) {
         log.info("API DELETE /api/phieubanhang/{} - Xóa phiếu bán hàng", id);
-        Optional<PhieuBanHang> pbh = service.getById(id);
+        Optional<PhieuBanHangResponse> pbh = service.getById(id);
         if (pbh.isEmpty()) {
             log.warn("Không tìm thấy phiếu bán hàng với id={} để xóa.", id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
