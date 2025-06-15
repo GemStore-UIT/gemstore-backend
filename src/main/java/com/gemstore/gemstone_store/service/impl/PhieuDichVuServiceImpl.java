@@ -87,11 +87,22 @@ public class PhieuDichVuServiceImpl implements PhieuDichVuService {
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy loại dịch vụ: " + ctReq.getMaLDV()));
 
             int donGia = ldv.getDonGia();
+            float tyLeTraTruoc = ldv.getTraTruoc();
+            int thanhTien = donGia * ctReq.getSoLuong();
+            int traTruoc = ctReq.getTraTruoc();
+
+            int minTraTruoc = (int)Math.ceil(thanhTien * tyLeTraTruoc / 100f);
+            if (traTruoc < minTraTruoc) {
+                throw new IllegalArgumentException("Trả trước của dịch vụ ["+ldv.getTenLDV()+"] phải tối thiểu " + tyLeTraTruoc + "% (≥ " + minTraTruoc + ")");
+            }
+            if (traTruoc > thanhTien) {
+                throw new IllegalArgumentException("Trả trước của dịch vụ ["+ldv.getTenLDV()+"] không vượt quá thành tiền (" + thanhTien + ")");
+            }
+
             ct.setLoaiDichVu(ldv);
             ct.setDonGia(donGia);
             ct.setSoLuong(ctReq.getSoLuong());
 
-            int thanhTien = donGia * ctReq.getSoLuong();
             ct.setThanhTien(thanhTien);
             ct.setTraTruoc(ctReq.getTraTruoc());
             ct.setConLai(thanhTien - ctReq.getTraTruoc());
