@@ -63,6 +63,19 @@ public class CTPhieuBanHangController {
                             .body("Không tìm thấy chi tiết phiếu bán hàng.");
                 });
     }
+    
+    @Operation(summary = "Lấy tất cả chi tiết của một phiếu bán hàng")
+    @GetMapping("/{soPhieu}")
+    public ResponseEntity<?> getAllByPhieuBH(@RequestParam UUID soPhieuBH){
+        log.info("API GET /api/ctphieubanhang/{} - Tìm tất cả chi tiết của một phiếu bán hàng", soPhieuBH);
+        List<CTPhieuBanHang> cts = service.getAllByPhieuBH(soPhieuBH);
+        if (cts.isEmpty()) {
+            log.warn("Không có chi tiết phiếu bán hàng nào.");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Không có chi tiết phiếu bán hàng nào.");
+        }
+        log.debug("Trả về {} chi tiết phiếu bán hàng", cts.size());
+        return ResponseEntity.ok(cts);
+    }
 
     @Operation(summary = "Tạo hoặc cập nhật chi tiết phiếu bán hàng")
     @PostMapping
