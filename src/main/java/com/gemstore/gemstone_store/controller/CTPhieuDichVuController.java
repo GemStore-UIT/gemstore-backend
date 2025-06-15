@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -51,7 +52,7 @@ public class CTPhieuDichVuController {
 
     @Operation(summary = "Lấy chi tiết phiếu dịch vụ theo mã")
     @GetMapping("/{soPhieuDV}/{maLDV}")
-    public ResponseEntity<?> getById(@PathVariable String soPhieuDV, @PathVariable String maLDV) {
+    public ResponseEntity<?> getById(@PathVariable UUID soPhieuDV, @PathVariable UUID maLDV) {
         log.info("API GET /api/ctphieudichvu/{}/{} - Tìm chi tiết phiếu dịch vụ", soPhieuDV, maLDV);
         CTPhieuDichVuId id = new CTPhieuDichVuId(soPhieuDV, maLDV);
         Optional<CTPhieuDichVu> ct = service.getById(id);
@@ -76,7 +77,7 @@ public class CTPhieuDichVuController {
 
     @Operation(summary = "Xóa chi tiết phiếu dịch vụ")
     @DeleteMapping("/{soPhieuDV}/{maLDV}")
-    public ResponseEntity<?> delete(@PathVariable String soPhieuDV, @PathVariable String maLDV) {
+    public ResponseEntity<?> delete(@PathVariable UUID soPhieuDV, @PathVariable UUID maLDV) {
         log.info("API DELETE /api/ctphieudichvu/{}/{} - Xóa chi tiết phiếu dịch vụ", soPhieuDV, maLDV);
         CTPhieuDichVuId id = new CTPhieuDichVuId(soPhieuDV, maLDV);
         Optional<CTPhieuDichVu> ct = service.getById(id);

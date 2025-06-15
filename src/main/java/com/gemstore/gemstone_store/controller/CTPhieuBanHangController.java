@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -51,7 +52,7 @@ public class CTPhieuBanHangController {
 
     @Operation(summary = "Lấy chi tiết phiếu bán hàng theo mã")
     @GetMapping("/{maSP}/{soPhieu}")
-    public ResponseEntity<?> getById(@PathVariable String maSP, @PathVariable String soPhieu) {
+    public ResponseEntity<?> getById(@PathVariable UUID maSP, @PathVariable UUID soPhieu) {
         log.info("API GET /api/ctphieubanhang/{}/{} - Tìm chi tiết phiếu bán hàng", maSP, soPhieu);
         CTPhieuBanHangId id = new CTPhieuBanHangId(maSP, soPhieu);
         Optional<CTPhieuBanHang> ct = service.getById(id);
@@ -76,7 +77,7 @@ public class CTPhieuBanHangController {
 
     @Operation(summary = "Xóa chi tiết phiếu bán hàng theo mã")
     @DeleteMapping("/{maSP}/{soPhieu}")
-    public ResponseEntity<?> delete(@PathVariable String maSP, @PathVariable String soPhieu) {
+    public ResponseEntity<?> delete(@PathVariable UUID maSP, @PathVariable UUID soPhieu) {
         log.info("API DELETE /api/ctphieubanhang/{}/{} - Xóa chi tiết phiếu bán hàng", maSP, soPhieu);
         CTPhieuBanHangId id = new CTPhieuBanHangId(maSP, soPhieu);
         Optional<CTPhieuBanHang> ct = service.getById(id);

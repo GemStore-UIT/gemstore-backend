@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -42,7 +43,7 @@ public class LoaiSanPhamController {
 
     @Operation(summary = "Lấy loại sản phẩm theo mã")
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable String id) {
+    public ResponseEntity<?> getById(@PathVariable UUID id) {
         log.info("API GET /api/loaisanpham/{} - Tìm loại sản phẩm", id);
         Optional<LoaiSanPham> lsp = service.getById(id);
         return lsp.<ResponseEntity<?>>map(ResponseEntity::ok)
@@ -66,7 +67,7 @@ public class LoaiSanPhamController {
 
     @Operation(summary = "Xóa loại sản phẩm theo mã")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable String id) {
+    public ResponseEntity<?> delete(@PathVariable UUID id) {
         log.info("API DELETE /api/loaisanpham/{} - Xóa loại sản phẩm", id);
         Optional<LoaiSanPham> lsp = service.getById(id);
         if (lsp.isEmpty()) {
