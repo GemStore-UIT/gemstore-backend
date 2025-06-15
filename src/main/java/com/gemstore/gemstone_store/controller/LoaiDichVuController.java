@@ -1,6 +1,5 @@
 package com.gemstore.gemstone_store.controller;
 
-import com.gemstore.gemstone_store.model.DonViTinh;
 import com.gemstore.gemstone_store.model.LoaiDichVu;
 import com.gemstore.gemstone_store.service.LoaiDichVuService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,15 +7,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.http.*;
-import org.springframework.validation.BindingResult;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController

@@ -1,8 +1,7 @@
 package com.gemstore.gemstone_store.controller;
 
+import com.gemstore.gemstone_store.dto.response.CTPhieuBanHangResponse;
 import com.gemstore.gemstone_store.model.CTPhieuBanHang;
-import com.gemstore.gemstone_store.model.PhieuBanHang;
-import com.gemstore.gemstone_store.model.SanPham;
 import com.gemstore.gemstone_store.model.id.CTPhieuBanHangId;
 import com.gemstore.gemstone_store.repository.PhieuBanHangRepository;
 import com.gemstore.gemstone_store.repository.SanPhamRepository;
@@ -12,15 +11,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.http.*;
-import org.springframework.validation.BindingResult;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -41,7 +38,7 @@ public class CTPhieuBanHangController {
     @GetMapping
     public ResponseEntity<?> getAll() {
         log.info("API GET /api/ctphieubanhang - Lấy tất cả chi tiết phiếu bán hàng");
-        List<CTPhieuBanHang> list = service.getAll();
+        List<CTPhieuBanHangResponse> list = service.getAll();
         if (list.isEmpty()) {
             log.warn("Không có chi tiết phiếu bán hàng nào.");
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Không có chi tiết phiếu bán hàng nào.");
@@ -55,7 +52,7 @@ public class CTPhieuBanHangController {
     public ResponseEntity<?> getById(@PathVariable UUID maSP, @PathVariable UUID soPhieu) {
         log.info("API GET /api/ctphieubanhang/{}/{} - Tìm chi tiết phiếu bán hàng", maSP, soPhieu);
         CTPhieuBanHangId id = new CTPhieuBanHangId(maSP, soPhieu);
-        Optional<CTPhieuBanHang> ct = service.getById(id);
+        Optional<CTPhieuBanHangResponse> ct = service.getById(id);
         return ct.<ResponseEntity<?>>map(ResponseEntity::ok)
                 .orElseGet(() -> {
                     log.warn("Không tìm thấy chi tiết phiếu bán hàng với id={}", id);
@@ -63,12 +60,12 @@ public class CTPhieuBanHangController {
                             .body("Không tìm thấy chi tiết phiếu bán hàng.");
                 });
     }
-    
+
     @Operation(summary = "Lấy tất cả chi tiết của một phiếu bán hàng")
-    @GetMapping("/{soPhieu}")
-    public ResponseEntity<?> getAllByPhieuBH(@RequestParam UUID soPhieuBH){
-        log.info("API GET /api/ctphieubanhang/{} - Tìm tất cả chi tiết của một phiếu bán hàng", soPhieuBH);
-        List<CTPhieuBanHang> cts = service.getAllByPhieuBH(soPhieuBH);
+    @GetMapping("/by-phieubanhang/{soPhieuBH}")
+    public ResponseEntity<?> getAllByPhieuBH(@PathVariable UUID soPhieuBH) {
+        log.info("API GET /api/ctphieubanhang/by-phieubanhang/{} - Tìm tất cả chi tiết của một phiếu bán hàng", soPhieuBH);
+        List<CTPhieuBanHangResponse> cts = service.getAllByPhieuBH(soPhieuBH);
         if (cts.isEmpty()) {
             log.warn("Không có chi tiết phiếu bán hàng nào.");
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Không có chi tiết phiếu bán hàng nào.");
@@ -93,7 +90,7 @@ public class CTPhieuBanHangController {
     public ResponseEntity<?> delete(@PathVariable UUID maSP, @PathVariable UUID soPhieu) {
         log.info("API DELETE /api/ctphieubanhang/{}/{} - Xóa chi tiết phiếu bán hàng", maSP, soPhieu);
         CTPhieuBanHangId id = new CTPhieuBanHangId(maSP, soPhieu);
-        Optional<CTPhieuBanHang> ct = service.getById(id);
+        Optional<CTPhieuBanHangResponse> ct = service.getById(id);
         if (ct.isEmpty()) {
             log.warn("Không tìm thấy chi tiết phiếu bán hàng với id={} để xóa.", id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy để xóa.");

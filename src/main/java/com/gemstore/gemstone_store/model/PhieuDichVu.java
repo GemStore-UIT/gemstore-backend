@@ -1,15 +1,17 @@
 package com.gemstore.gemstone_store.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import lombok.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -54,4 +56,8 @@ public class PhieuDichVu {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Pattern(regexp = "Hoàn thành|Chưa hoàn thành", message = "Tình trạng phải là 'Hoàn thành' hoặc 'Chưa hoàn thành'")
     private String tinhTrang;
+
+    @OneToMany(mappedBy = "phieuDichVu", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<CTPhieuDichVu> chiTiet;
 }

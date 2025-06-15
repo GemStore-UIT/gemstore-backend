@@ -1,13 +1,16 @@
 package com.gemstore.gemstone_store.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -33,5 +36,9 @@ public class PhieuMuaHang {
     @Column(name = "tongtien")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Min(value = 0, message = "Tổng tiền phải lớn hơn 0")
-    private int tongTien;
+    private Integer tongTien;
+
+    @OneToMany(mappedBy = "phieuMuaHang", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<CTPhieuMuaHang> chiTiet;
 }

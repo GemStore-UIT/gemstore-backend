@@ -1,6 +1,7 @@
 package com.gemstore.gemstone_store.service.impl;
 
-import com.gemstore.gemstone_store.model.CTPhieuBanHang;
+import com.gemstore.gemstone_store.dto.response.CTPhieuMuaHangResponse;
+import com.gemstore.gemstone_store.mapper.CTPhieuMuaHangMapper;
 import com.gemstore.gemstone_store.model.CTPhieuMuaHang;
 import com.gemstore.gemstone_store.model.PhieuMuaHang;
 import com.gemstore.gemstone_store.model.SanPham;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -35,31 +37,35 @@ public class CTPhieuMuaHangServiceImpl implements CTPhieuMuaHangService {
     private PhieuMuaHangService pmhService;
 
     @Override
-    public List<CTPhieuMuaHang> getAll() {
+    public List<CTPhieuMuaHangResponse> getAll() {
         log.info("Lấy tất cả chi tiết phiếu mua hàng");
         List<CTPhieuMuaHang> list = repo.findAll();
         log.debug("Số lượng chi tiết phiếu mua hàng trả về: {}", list.size());
-        return list;
+        return list.stream()
+                .map(CTPhieuMuaHangMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<CTPhieuMuaHang> getById(CTPhieuMuaHangId id) {
+    public Optional<CTPhieuMuaHangResponse> getById(CTPhieuMuaHangId id) {
         log.info("Tìm chi tiết phiếu mua hàng với id={}", id);
         Optional<CTPhieuMuaHang> ct = repo.findById(id);
         if (ct.isEmpty()) {
             log.warn("Không tìm thấy chi tiết phiếu mua hàng với id={}", id);
         }
-        return ct;
+        return ct.map(CTPhieuMuaHangMapper::toDto);
     }
 
     @Override
-    public List<CTPhieuMuaHang> getAllByPhieuMH(UUID soPhieuMH){
+    public List<CTPhieuMuaHangResponse> getAllByPhieuMH(UUID soPhieuMH){
         log.info("Tìm chi tiết phiếu bán hàng của phiếu mua hàng {}", soPhieuMH);
         List<CTPhieuMuaHang> cts = repo.findByPhieuMuaHang_SoPhieuMH(soPhieuMH);
         if (cts.isEmpty()) {
             log.warn("Không tìm thấy chi tiết phiếu mua hàng của phiếu {}", soPhieuMH);
         }
-        return cts;
+        return cts.stream()
+                .map(CTPhieuMuaHangMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override

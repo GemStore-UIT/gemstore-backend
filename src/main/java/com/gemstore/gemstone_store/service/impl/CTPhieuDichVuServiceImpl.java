@@ -1,5 +1,7 @@
 package com.gemstore.gemstone_store.service.impl;
 
+import com.gemstore.gemstone_store.dto.response.CTPhieuDichVuResponse;
+import com.gemstore.gemstone_store.mapper.CTPhieuDichVuMapper;
 import com.gemstore.gemstone_store.model.CTPhieuDichVu;
 import com.gemstore.gemstone_store.model.LoaiDichVu;
 import com.gemstore.gemstone_store.model.PhieuDichVu;
@@ -12,13 +14,12 @@ import com.gemstore.gemstone_store.service.PhieuDichVuService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -37,31 +38,35 @@ public class CTPhieuDichVuServiceImpl implements CTPhieuDichVuService {
     private PhieuDichVuService phieuDichVuService;
 
     @Override
-    public List<CTPhieuDichVu> getAll() {
+    public List<CTPhieuDichVuResponse> getAll() {
         log.info("Lấy tất cả chi tiết phiếu dịch vụ");
         List<CTPhieuDichVu> list = repo.findAll();
         log.debug("Số lượng chi tiết phiếu dịch vụ trả về: {}", list.size());
-        return list;
+        return list.stream()
+                .map(CTPhieuDichVuMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<CTPhieuDichVu> getById(CTPhieuDichVuId id) {
+    public Optional<CTPhieuDichVuResponse> getById(CTPhieuDichVuId id) {
         log.info("Tìm chi tiết phiếu dịch vụ với id={}", id);
         Optional<CTPhieuDichVu> ct = repo.findById(id);
         if (ct.isEmpty()) {
             log.warn("Không tìm thấy chi tiết phiếu dịch vụ với id={}", id);
         }
-        return ct;
+        return ct.map(CTPhieuDichVuMapper::toDto);
     }
 
     @Override
-    public List<CTPhieuDichVu> getAllByPhieuDV(UUID soPhieuDV){
+    public List<CTPhieuDichVuResponse> getAllByPhieuDV(UUID soPhieuDV){
         log.info("Tìm tất cả chi tiết của phiếu dịch vụ {}", soPhieuDV);
         List<CTPhieuDichVu> cts = repo.findByPhieuDichVu_SoPhieuDV(soPhieuDV);
         if(cts.isEmpty()){
             log.warn("Không tìm thấy chi tiết phiếu dịch vụ của phiếu {}", soPhieuDV);
         }
-        return cts;
+        return cts.stream()
+                .map(CTPhieuDichVuMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
