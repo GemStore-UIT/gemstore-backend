@@ -88,6 +88,8 @@ public class PhieuBanHangServiceImpl implements PhieuBanHangService {
             ct.setSoLuong(ctReq.getSoLuong());
             ct.setPhieuBanHang(pbh);
 
+            sp.setTonKho(sp.getTonKho() - ctReq.getSoLuong());
+
             int thanhTien = (int)(sp.getDonGia() * ct.getSoLuong() * (1 + sp.getLoaiSanPham().getLoiNhuan() / 100.0));
             ct.setThanhTien(thanhTien);
             tongTien += thanhTien;
