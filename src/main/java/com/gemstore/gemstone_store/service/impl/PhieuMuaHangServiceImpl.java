@@ -93,6 +93,8 @@ public class PhieuMuaHangServiceImpl implements PhieuMuaHangService {
             ct.setSoLuong(ctReq.getSoLuong());
             ct.setPhieuMuaHang(pmh);
 
+            sp.setTonKho(sp.getTonKho() + ctReq.getSoLuong());
+
             int thanhTien = sp.getDonGia() * ct.getSoLuong();
             ct.setThanhTien(thanhTien);
             tongTien += thanhTien;
