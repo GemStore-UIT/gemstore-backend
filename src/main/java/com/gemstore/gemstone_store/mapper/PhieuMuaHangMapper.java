@@ -12,7 +12,7 @@ public class PhieuMuaHangMapper {
         PhieuMuaHangResponse dto = new PhieuMuaHangResponse();
         dto.setSoPhieuMH(entity.getSoPhieuMH());
         dto.setNgayLap(entity.getNgayLap());
-        dto.setTenNhaCungCap(entity.getNhaCungCap() != null ? entity.getNhaCungCap() : null);
+        dto.setNhaCungCap(entity.getNhaCungCap() != null ? entity.getNhaCungCap() : null);
         dto.setTongTien(entity.getTongTien());
         if (entity.getChiTiet() != null) {
             List<CTPhieuMuaHangResponse> ctDtos = entity.getChiTiet().stream()
