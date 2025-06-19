@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,5 +40,6 @@ public class PhieuBanHang {
 
     @OneToMany(mappedBy = "phieuBanHang", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
+    @ToString.Exclude
     private List<CTPhieuBanHang> chiTiet;
 }

@@ -12,6 +12,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -31,6 +32,7 @@ public class CTPhieuDichVu {
     @JoinColumn(name = "sophieudv", referencedColumnName = "sophieudv")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JsonBackReference
+    @ToString.Exclude
     @NotNull(message = "Mã phiếu dịch vụ không được để trống")
     private PhieuDichVu phieuDichVu;
 
