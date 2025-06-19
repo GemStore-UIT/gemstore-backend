@@ -11,7 +11,7 @@ import java.util.UUID;
 public class PhieuMuaHangResponse {
     private UUID soPhieuMH;
     private LocalDateTime ngayLap;
-    private NhaCungCap tenNhaCungCap;
+    private NhaCungCap nhaCungCap;
     private Integer tongTien;
     private List<CTPhieuMuaHangResponse> chiTiet;
 }
