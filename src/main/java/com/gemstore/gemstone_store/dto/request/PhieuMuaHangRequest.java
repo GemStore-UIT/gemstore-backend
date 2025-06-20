@@ -7,6 +7,7 @@ import java.util.UUID;
 
 @Data
 public class PhieuMuaHangRequest {
+    private UUID soPhieuMH;
     private UUID nhaCungCap;
     private List<CTPhieuMuaHangRequest> chiTiet;
 }
