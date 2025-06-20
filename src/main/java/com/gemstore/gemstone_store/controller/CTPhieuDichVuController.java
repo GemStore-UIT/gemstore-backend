@@ -1,8 +1,8 @@
 package com.gemstore.gemstone_store.controller;
 
+import com.gemstore.gemstone_store.dto.request.CTPhieuDichVuRequest;
+import com.gemstore.gemstone_store.dto.response.CTPhieuDichVuResponse;
 import com.gemstore.gemstone_store.model.CTPhieuDichVu;
-import com.gemstore.gemstone_store.model.LoaiDichVu;
-import com.gemstore.gemstone_store.model.PhieuDichVu;
 import com.gemstore.gemstone_store.model.id.CTPhieuDichVuId;
 import com.gemstore.gemstone_store.repository.LoaiDichVuRepository;
 import com.gemstore.gemstone_store.repository.PhieuDichVuRepository;
@@ -12,15 +12,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -41,7 +39,7 @@ public class CTPhieuDichVuController {
     @GetMapping
     public ResponseEntity<?> getAll() {
         log.info("API GET /api/ctphieudichvu - Lấy tất cả chi tiết phiếu dịch vụ");
-        List<CTPhieuDichVu> list = service.getAll();
+        List<CTPhieuDichVuResponse> list = service.getAll();
         if (list.isEmpty()) {
             log.warn("Không có chi tiết phiếu dịch vụ nào.");
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Không có chi tiết phiếu dịch vụ nào.");
@@ -55,7 +53,7 @@ public class CTPhieuDichVuController {
     public ResponseEntity<?> getById(@PathVariable UUID soPhieuDV, @PathVariable UUID maLDV) {
         log.info("API GET /api/ctphieudichvu/{}/{} - Tìm chi tiết phiếu dịch vụ", soPhieuDV, maLDV);
         CTPhieuDichVuId id = new CTPhieuDichVuId(soPhieuDV, maLDV);
-        Optional<CTPhieuDichVu> ct = service.getById(id);
+        Optional<CTPhieuDichVuResponse> ct = service.getById(id);
         return ct.<ResponseEntity<?>>map(ResponseEntity::ok)
                 .orElseGet(() -> {
                     log.warn("Không tìm thấy chi tiết phiếu dịch vụ với id={}", id);
@@ -65,10 +63,10 @@ public class CTPhieuDichVuController {
     }
 
     @Operation
-    @GetMapping("/{soPhieuDV}")
-    public ResponseEntity<?> getAllByPhieuDV(@RequestParam UUID soPhieuDV){
-        log.info("API GET /api/ctphieudichvu/{}- Tìm tất cả chi tiết của một phiếu dịch vụ", soPhieuDV);
-        List<CTPhieuDichVu> cts = service.getAllByPhieuDV(soPhieuDV);
+    @GetMapping("/by-phieudichvu/{soPhieuDV}")
+    public ResponseEntity<?> getAllByPhieuDV(@PathVariable UUID soPhieuDV){
+        log.info("API GET /api/ctphieudichvu//by-phieudichvu/{}- Tìm tất cả chi tiết của một phiếu dịch vụ", soPhieuDV);
+        List<CTPhieuDichVuResponse> cts = service.getAllByPhieuDV(soPhieuDV);
         if(cts.isEmpty()){
             log.warn("Không tìm thấy chi tiết phiếu dịch vụ của phiếu {}", soPhieuDV);
         }
@@ -77,13 +75,11 @@ public class CTPhieuDichVuController {
 
     @Operation(summary = "Tạo hoặc cập nhật chi tiết phiếu dịch vụ")
     @PostMapping
-    public ResponseEntity<?> createOrUpdate(@Valid @RequestBody CTPhieuDichVu ct) {
+    public ResponseEntity<?> createOrUpdate(@Valid @RequestBody CTPhieuDichVuRequest ct) {
         log.info("API POST /api/ctphieudichvu - Tạo/cập nhật chi tiết phiếu dịch vụ: {}", ct);
-        CTPhieuDichVu saved = service.save(ct);
-        log.info("Đã lưu chi tiết phiếu dịch vụ thành công với id={}", saved.getId());
-        return ResponseEntity.status(
-                ct.getId() == null ? HttpStatus.CREATED : HttpStatus.OK
-        ).body(saved);
+        CTPhieuDichVuResponse saved = service.save(ct);
+        log.info("Đã lưu chi tiết phiếu dịch vụ thành công với soPhieuDV={}, maLDV={}", saved.getSoPhieuDV(), saved.getMaLDV());
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @Operation(summary = "Xóa chi tiết phiếu dịch vụ")
@@ -91,7 +87,7 @@ public class CTPhieuDichVuController {
     public ResponseEntity<?> delete(@PathVariable UUID soPhieuDV, @PathVariable UUID maLDV) {
         log.info("API DELETE /api/ctphieudichvu/{}/{} - Xóa chi tiết phiếu dịch vụ", soPhieuDV, maLDV);
         CTPhieuDichVuId id = new CTPhieuDichVuId(soPhieuDV, maLDV);
-        Optional<CTPhieuDichVu> ct = service.getById(id);
+        Optional<CTPhieuDichVuResponse> ct = service.getById(id);
         if (ct.isEmpty()) {
             log.warn("Không tìm thấy chi tiết phiếu dịch vụ với id={} để xóa.", id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy để xóa.");

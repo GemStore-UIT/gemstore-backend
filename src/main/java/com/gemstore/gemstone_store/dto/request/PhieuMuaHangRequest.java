@@ -1,6 +1,5 @@
 package com.gemstore.gemstone_store.dto.request;
 
-import com.gemstore.gemstone_store.model.NhaCungCap;
 import lombok.Data;
 
 import java.util.List;

@@ -4,7 +4,6 @@ import com.gemstore.gemstone_store.dto.request.CTPhieuBanHangRequest;
 import com.gemstore.gemstone_store.dto.request.PhieuBanHangRequest;
 import com.gemstore.gemstone_store.dto.response.PhieuBanHangResponse;
 import com.gemstore.gemstone_store.mapper.PhieuBanHangMapper;
-import com.gemstore.gemstone_store.mapper.PhieuMuaHangMapper;
 import com.gemstore.gemstone_store.model.CTPhieuBanHang;
 import com.gemstore.gemstone_store.model.PhieuBanHang;
 import com.gemstore.gemstone_store.model.SanPham;
@@ -75,7 +74,10 @@ public class PhieuBanHangServiceImpl implements PhieuBanHangService {
         pbh.setKhachHang(req.getKhachHang());
         pbh.setNgayLap(LocalDateTime.now());
 
+        pbh = repo.save(pbh);
+
         List<CTPhieuBanHang> chiTietList = new ArrayList<>();
+        int tongTien = 0;
         for (CTPhieuBanHangRequest ctReq : req.getChiTiet()) {
             CTPhieuBanHang ct = new CTPhieuBanHang();
 
@@ -85,7 +87,12 @@ public class PhieuBanHangServiceImpl implements PhieuBanHangService {
             ct.setSanPham(sp);
             ct.setSoLuong(ctReq.getSoLuong());
             ct.setPhieuBanHang(pbh);
-            ct.setThanhTien((int)(sp.getDonGia() * ct.getSoLuong() * (1 + sp.getLoaiSanPham().getLoiNhuan() / 100.0)));
+
+            sp.setTonKho(sp.getTonKho() - ctReq.getSoLuong());
+
+            int thanhTien = (int)(sp.getDonGia() * ct.getSoLuong() * (1 + sp.getLoaiSanPham().getLoiNhuan() / 100.0));
+            ct.setThanhTien(thanhTien);
+            tongTien += thanhTien;
 
             CTPhieuBanHangId id = new CTPhieuBanHangId(sp.getMaSanPham(), pbh.getSoPhieuBH());
             ct.setId(id);
@@ -93,6 +100,7 @@ public class PhieuBanHangServiceImpl implements PhieuBanHangService {
             chiTietList.add(ct);
         }
         pbh.setChiTiet(chiTietList);
+        pbh.setTongTien(tongTien);
 
         repo.save(pbh);
 

@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface CTPhieuBanHangService {
     List<CTPhieuBanHangResponse> getAll();
     Optional<CTPhieuBanHangResponse> getById(CTPhieuBanHangId id);
-    List<CTPhieuBanHang> getAllByPhieuBH(UUID soPhieuBH);
+    List<CTPhieuBanHangResponse> getAllByPhieuBH(UUID soPhieuBH);
     CTPhieuBanHang save(CTPhieuBanHang ct);
     void delete(CTPhieuBanHangId id);
 }

@@ -1,6 +1,5 @@
 package com.gemstore.gemstone_store.service;
 
-import com.gemstore.gemstone_store.model.SanPham;
 import com.gemstore.gemstone_store.model.ThamSo;
 
 import java.util.List;

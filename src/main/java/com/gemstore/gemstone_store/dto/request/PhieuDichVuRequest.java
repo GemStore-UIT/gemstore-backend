@@ -5,7 +5,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class PhieuBanHangRequest {
+public class PhieuDichVuRequest {
     private String khachHang;
-    private List<CTPhieuBanHangRequest> chiTiet;
+    private String sdt;
+    private List<CTPhieuDichVuRequest> chiTiet;
 }

@@ -1,9 +1,7 @@
 package com.gemstore.gemstone_store.controller;
 
-import com.gemstore.gemstone_store.dto.request.PhieuBanHangRequest;
 import com.gemstore.gemstone_store.dto.request.PhieuMuaHangRequest;
 import com.gemstore.gemstone_store.dto.response.PhieuMuaHangResponse;
-import com.gemstore.gemstone_store.model.PhieuBanHang;
 import com.gemstore.gemstone_store.model.PhieuMuaHang;
 import com.gemstore.gemstone_store.service.PhieuMuaHangService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,16 +9,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -69,7 +64,7 @@ public class PhieuMuaHangController {
     }
 
     @PostMapping("/full")
-    @Operation(summary = "Tạo phiếu bán hàng cùng chi tiết")
+    @Operation(summary = "Tạo phiếu mua hàng cùng chi tiết")
     public ResponseEntity<?> createWithCT(@Valid @RequestBody PhieuMuaHangRequest req) {
         PhieuMuaHangResponse saved = service.saveWithCT(req);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);

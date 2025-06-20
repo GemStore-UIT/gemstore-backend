@@ -4,7 +4,10 @@ import com.gemstore.gemstone_store.dto.request.CTPhieuMuaHangRequest;
 import com.gemstore.gemstone_store.dto.request.PhieuMuaHangRequest;
 import com.gemstore.gemstone_store.dto.response.PhieuMuaHangResponse;
 import com.gemstore.gemstone_store.mapper.PhieuMuaHangMapper;
-import com.gemstore.gemstone_store.model.*;
+import com.gemstore.gemstone_store.model.CTPhieuMuaHang;
+import com.gemstore.gemstone_store.model.NhaCungCap;
+import com.gemstore.gemstone_store.model.PhieuMuaHang;
+import com.gemstore.gemstone_store.model.SanPham;
 import com.gemstore.gemstone_store.model.id.CTPhieuMuaHangId;
 import com.gemstore.gemstone_store.repository.CTPhieuMuaHangRepository;
 import com.gemstore.gemstone_store.repository.NhaCungCapRepository;
@@ -76,7 +79,10 @@ public class PhieuMuaHangServiceImpl implements PhieuMuaHangService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy NCC"));
         pmh.setNhaCungCap(ncc);
 
+        pmh = repo.save(pmh);
+
         List<CTPhieuMuaHang> ctList = new ArrayList<>();
+        int tongTien = 0;
         for (CTPhieuMuaHangRequest ctReq : req.getChiTiet()) {
             CTPhieuMuaHang ct = new CTPhieuMuaHang();
 
@@ -87,14 +93,18 @@ public class PhieuMuaHangServiceImpl implements PhieuMuaHangService {
             ct.setSoLuong(ctReq.getSoLuong());
             ct.setPhieuMuaHang(pmh);
 
-            ct.setThanhTien(sp.getDonGia() * ct.getSoLuong());
+            sp.setTonKho(sp.getTonKho() + ctReq.getSoLuong());
 
-            CTPhieuMuaHangId id = new CTPhieuMuaHangId(sp.getMaSanPham(), pmh.getSoPhieuMH());
-            ct.setId(id);
+            int thanhTien = sp.getDonGia() * ct.getSoLuong();
+            ct.setThanhTien(thanhTien);
+            tongTien += thanhTien;
+
+            ct.setId(new CTPhieuMuaHangId(sp.getMaSanPham(), pmh.getSoPhieuMH()));
 
             ctList.add(ct);
         }
         pmh.setChiTiet(ctList);
+        pmh.setTongTien(tongTien);
 
         repo.save(pmh);
 

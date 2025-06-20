@@ -2,7 +2,6 @@ package com.gemstore.gemstone_store.service.impl;
 
 import com.gemstore.gemstone_store.dto.response.CTPhieuBanHangResponse;
 import com.gemstore.gemstone_store.mapper.CTPhieuBanHangMapper;
-import com.gemstore.gemstone_store.mapper.PhieuBanHangMapper;
 import com.gemstore.gemstone_store.model.CTPhieuBanHang;
 import com.gemstore.gemstone_store.model.PhieuBanHang;
 import com.gemstore.gemstone_store.model.SanPham;
@@ -58,13 +57,15 @@ public class CTPhieuBanHangServiceImpl implements CTPhieuBanHangService {
     }
 
     @Override
-    public List<CTPhieuBanHang> getAllByPhieuBH(UUID soPhieuBH){
+    public List<CTPhieuBanHangResponse> getAllByPhieuBH(UUID soPhieuBH){
         log.info("Tìm chi tiết phiếu bán hàng của phiếu bán hàng {}", soPhieuBH);
         List<CTPhieuBanHang> cts = repo.findByPhieuBanHang_SoPhieuBH(soPhieuBH);
         if (cts.isEmpty()) {
             log.warn("Không tìm thấy chi tiết phiếu bán hàng của phiếu {}", soPhieuBH);
         }
-        return cts;
+        return cts.stream()
+                .map(CTPhieuBanHangMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
