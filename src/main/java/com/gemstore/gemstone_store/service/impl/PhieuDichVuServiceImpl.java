@@ -70,67 +70,82 @@ public class PhieuDichVuServiceImpl implements PhieuDichVuService {
     @Override
     @Transactional
     public PhieuDichVuResponse saveWithCT(PhieuDichVuRequest req) {
-        PhieuDichVu pdv = new PhieuDichVu();
-        pdv.setNgayLap(LocalDateTime.now());
-        pdv.setKhachHang(req.getKhachHang());
-        pdv.setSdt(req.getSdt());
+        PhieuDichVu pdv;
+        boolean isUpdate = req.getSoPhieuDV() != null && repo.existsById(req.getSoPhieuDV());
 
-        pdv = repo.save(pdv);
+        if (isUpdate) {
+            pdv = repo.findById(req.getSoPhieuDV())
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy phiếu dịch vụ để cập nhật"));
 
-        List<CTPhieuDichVu> ctList = new ArrayList<>();
-        int tongTien = 0, tongTraTruoc = 0, tongConLai = 0;
+            pdv.setNgayLap(LocalDateTime.now());
+            pdv.setKhachHang(req.getKhachHang());
+            pdv.setSdt(req.getSdt());
+
+            pdv.getChiTiet().clear();
+
+        } else {
+            pdv = new PhieuDichVu();
+            pdv.setNgayLap(LocalDateTime.now());
+            pdv.setKhachHang(req.getKhachHang());
+            pdv.setSdt(req.getSdt());
+            pdv.setChiTiet(new ArrayList<>());
+
+            pdv = repo.save(pdv);
+        }
+
+        int tongTien = 0;
+        int tongTraTruoc = 0;
+        int tongConLai = 0;
 
         for (CTPhieuDichVuRequest ctReq : req.getChiTiet()) {
-            CTPhieuDichVu ct = new CTPhieuDichVu();
-
             LoaiDichVu ldv = ldvRepo.findById(ctReq.getMaLDV())
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy loại dịch vụ: " + ctReq.getMaLDV()));
 
             int donGia = ldv.getDonGia();
             float tyLeTraTruoc = ldv.getTraTruoc();
-            int thanhTien = donGia * ctReq.getSoLuong();
+            int soLuong = ctReq.getSoLuong();
+            int thanhTien = donGia * soLuong;
             int traTruoc = ctReq.getTraTruoc();
 
-            int minTraTruoc = (int)Math.ceil(thanhTien * tyLeTraTruoc / 100f);
+            int minTraTruoc = (int) Math.ceil(thanhTien * tyLeTraTruoc / 100f);
             if (traTruoc < minTraTruoc) {
-                throw new IllegalArgumentException("Trả trước của dịch vụ ["+ldv.getTenLDV()+"] phải tối thiểu " + tyLeTraTruoc + "% (≥ " + minTraTruoc + ")");
+                throw new IllegalArgumentException("Trả trước của dịch vụ [" + ldv.getTenLDV() + "] phải tối thiểu " + tyLeTraTruoc + "% (≥ " + minTraTruoc + ")");
             }
             if (traTruoc > thanhTien) {
-                throw new IllegalArgumentException("Trả trước của dịch vụ ["+ldv.getTenLDV()+"] không vượt quá thành tiền (" + thanhTien + ")");
+                throw new IllegalArgumentException("Trả trước của dịch vụ [" + ldv.getTenLDV() + "] không vượt quá thành tiền (" + thanhTien + ")");
             }
 
+            CTPhieuDichVu ct = new CTPhieuDichVu();
             ct.setLoaiDichVu(ldv);
             ct.setDonGia(donGia);
-            ct.setSoLuong(ctReq.getSoLuong());
-
+            ct.setSoLuong(soLuong);
             ct.setThanhTien(thanhTien);
-            ct.setTraTruoc(ctReq.getTraTruoc());
-            ct.setConLai(thanhTien - ctReq.getTraTruoc());
+            ct.setTraTruoc(traTruoc);
+            ct.setConLai(thanhTien - traTruoc);
             ct.setNgayGiao(ctReq.getNgayGiao());
             ct.setTinhTrang(ctReq.getTinhTrang());
             ct.setPhieuDichVu(pdv);
-
             ct.setId(new CTPhieuDichVuId(pdv.getSoPhieuDV(), ldv.getMaLDV()));
 
             tongTien += thanhTien;
-            tongTraTruoc += ctReq.getTraTruoc();
-            tongConLai += (thanhTien - ctReq.getTraTruoc());
+            tongTraTruoc += traTruoc;
+            tongConLai += (thanhTien - traTruoc);
 
-            ctList.add(ct);
+            pdv.getChiTiet().add(ct);
         }
-        pdv.setChiTiet(ctList);
+
         pdv.setTongTien(tongTien);
         pdv.setTongTienTraTruoc(tongTraTruoc);
         pdv.setTongTienConLai(tongConLai);
 
-        boolean isHoanThanh = ctList.stream()
+        boolean isHoanThanh = pdv.getChiTiet().stream()
                 .allMatch(ct -> "Đã giao".equals(ct.getTinhTrang()));
         pdv.setTinhTrang(isHoanThanh ? "Hoàn thành" : "Chưa hoàn thành");
 
-        repo.save(pdv);
-
+        pdv = repo.save(pdv);
         return PhieuDichVuMapper.toDto(pdv);
     }
+
 
 
     @Override

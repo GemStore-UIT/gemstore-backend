@@ -64,7 +64,7 @@ public class PhieuDichVuController {
     }
 
     @PostMapping("/full")
-    @Operation(summary = "Tạo phiếu dịch vụ cùng chi tiết")
+    @Operation(summary = "Tạo hoặc cập nhật phiếu dịch vụ cùng chi tiết")
     public ResponseEntity<?> createWithCT(@Valid @RequestBody PhieuDichVuRequest req) {
         PhieuDichVuResponse saved = service.saveWithCT(req);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
