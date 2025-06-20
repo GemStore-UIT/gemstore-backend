@@ -79,6 +79,11 @@ public class PhieuBanHangServiceImpl implements PhieuBanHangService {
 
             pbh.setKhachHang(req.getKhachHang());
 
+            for(CTPhieuBanHang oldCT : pbh.getChiTiet()){
+                SanPham sanPham = oldCT.getSanPham();
+                if(sanPham != null) sanPham.setTonKho(sanPham.getTonKho() + oldCT.getSoLuong());
+            }
+
             pbh.getChiTiet().clear();
         } else {
             pbh = new PhieuBanHang();
@@ -95,6 +100,7 @@ public class PhieuBanHangServiceImpl implements PhieuBanHangService {
             SanPham sp = spRepo.findById(ctReq.getMaSanPham())
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm: " + ctReq.getMaSanPham()));
 
+
             if (sp.getTonKho() < ctReq.getSoLuong()) {
                 throw new IllegalArgumentException("Không đủ tồn kho cho sản phẩm: " + sp.getTenSanPham());
             }
@@ -105,7 +111,7 @@ public class PhieuBanHangServiceImpl implements PhieuBanHangService {
             ct.setPhieuBanHang(pbh);
 
             double tyLeLN = sp.getLoaiSanPham().getLoiNhuan() / 100.0;
-            int thanhTien = (int) (sp.getDonGia() * ct.getSoLuong() * (1 + tyLeLN));
+            int thanhTien = (int) Math.ceil((sp.getDonGia() * ct.getSoLuong() * (1 + tyLeLN)));
             ct.setThanhTien(thanhTien);
             tongTien += thanhTien;
 
