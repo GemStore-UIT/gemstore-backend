@@ -121,7 +121,6 @@ public class PhieuMuaHangServiceImpl implements PhieuMuaHangService {
             NhaCungCap ncc = nccRepo.findById(req.getNhaCungCap())
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy nhà cung cấp: " + req.getNhaCungCap()));
             pmh.setNhaCungCap(ncc);
-            pmh.setNgayLap(LocalDateTime.now());
 
             pmh.getChiTiet().clear();
         } else {

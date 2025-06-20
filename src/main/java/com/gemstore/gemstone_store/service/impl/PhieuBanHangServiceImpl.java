@@ -77,7 +77,6 @@ public class PhieuBanHangServiceImpl implements PhieuBanHangService {
             pbh = repo.findById(req.getSoPhieuBH())
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy phiếu bán hàng để cập nhật"));
 
-            pbh.setNgayLap(LocalDateTime.now());
             pbh.setKhachHang(req.getKhachHang());
 
             pbh.getChiTiet().clear();

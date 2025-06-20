@@ -77,7 +77,6 @@ public class PhieuDichVuServiceImpl implements PhieuDichVuService {
             pdv = repo.findById(req.getSoPhieuDV())
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy phiếu dịch vụ để cập nhật"));
 
-            pdv.setNgayLap(LocalDateTime.now());
             pdv.setKhachHang(req.getKhachHang());
             pdv.setSdt(req.getSdt());
 
