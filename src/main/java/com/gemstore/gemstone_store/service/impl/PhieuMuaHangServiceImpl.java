@@ -59,12 +59,50 @@ public class PhieuMuaHangServiceImpl implements PhieuMuaHangService {
     }
 
     @Override
+    @Transactional
     public PhieuMuaHang save(PhieuMuaHang pmh) {
         log.info("Lưu phiếu mua hàng: {}", pmh);
-        if (!repo.existsById(pmh.getSoPhieuMH())) {
-            pmh.setNgayLap(LocalDateTime.now());
+
+        boolean isUpdate = pmh.getSoPhieuMH() != null && repo.existsById(pmh.getSoPhieuMH());
+
+        PhieuMuaHang target = isUpdate
+                ? repo.findById(pmh.getSoPhieuMH()).orElseThrow(() -> new RuntimeException("Không tìm thấy phiếu mua hàng!"))
+                : pmh;
+
+        target.setNgayLap(isUpdate ? pmh.getNgayLap() : LocalDateTime.now());
+        target.setNhaCungCap(pmh.getNhaCungCap());
+        target.setTongTien(pmh.getTongTien());
+
+        if (isUpdate) {
+            target.getChiTiet().clear();
         }
-        PhieuMuaHang saved = repo.save(pmh);
+
+        if (pmh.getChiTiet() != null) {
+            for (CTPhieuMuaHang ct : pmh.getChiTiet()) {
+                // Lấy maSanPham an toàn
+                UUID maSanPham;
+                if (ct.getSanPham() != null && ct.getSanPham().getMaSanPham() != null) {
+                    maSanPham = ct.getSanPham().getMaSanPham();
+                } else if (ct.getId() != null && ct.getId().getMaSanPham() != null) {
+                    maSanPham = ct.getId().getMaSanPham();
+                } else {
+                    maSanPham = null;
+                    throw new IllegalArgumentException("Chi tiết phải có mã sản phẩm (maSanPham)!");
+                }
+
+                // Lấy sản phẩm từ DB
+                SanPham sp = spRepo.findById(maSanPham)
+                        .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm: " + maSanPham));
+
+                ct.setSanPham(sp);
+                ct.setPhieuMuaHang(target);
+                ct.setId(new CTPhieuMuaHangId(sp.getMaSanPham(), target.getSoPhieuMH()));
+
+                target.getChiTiet().add(ct);
+            }
+        }
+
+        PhieuMuaHang saved = repo.save(target);
         log.info("Lưu thành công phiếu mua hàng với id={}", saved.getSoPhieuMH());
         return saved;
     }
@@ -72,41 +110,55 @@ public class PhieuMuaHangServiceImpl implements PhieuMuaHangService {
     @Override
     @Transactional
     public PhieuMuaHangResponse saveWithCT(PhieuMuaHangRequest req) {
-        PhieuMuaHang pmh = new PhieuMuaHang();
-        pmh.setNgayLap(LocalDateTime.now());
+        PhieuMuaHang pmh;
 
-        NhaCungCap ncc = nccRepo.findById(req.getNhaCungCap())
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy NCC"));
-        pmh.setNhaCungCap(ncc);
+        boolean isUpdate = req.getSoPhieuMH() != null && repo.existsById(req.getSoPhieuMH());
 
-        pmh = repo.save(pmh);
+        if (isUpdate) {
+            pmh = repo.findById(req.getSoPhieuMH())
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy phiếu mua hàng để cập nhật"));
 
-        List<CTPhieuMuaHang> ctList = new ArrayList<>();
+            NhaCungCap ncc = nccRepo.findById(req.getNhaCungCap())
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy nhà cung cấp: " + req.getNhaCungCap()));
+            pmh.setNhaCungCap(ncc);
+            pmh.setNgayLap(LocalDateTime.now());
+
+            pmh.getChiTiet().clear();
+        } else {
+            pmh = new PhieuMuaHang();
+            pmh.setNgayLap(LocalDateTime.now());
+            pmh.setChiTiet(new ArrayList<>());
+
+            NhaCungCap ncc = nccRepo.findById(req.getNhaCungCap())
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy nhà cung cấp: " + req.getNhaCungCap()));
+            pmh.setNhaCungCap(ncc);
+
+            pmh = repo.save(pmh);
+        }
+
         int tongTien = 0;
-        for (CTPhieuMuaHangRequest ctReq : req.getChiTiet()) {
-            CTPhieuMuaHang ct = new CTPhieuMuaHang();
 
+        for (CTPhieuMuaHangRequest ctReq : req.getChiTiet()) {
             SanPham sp = spRepo.findById(ctReq.getMaSanPham())
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm: " + ctReq.getMaSanPham()));
 
+            CTPhieuMuaHang ct = new CTPhieuMuaHang();
             ct.setSanPham(sp);
             ct.setSoLuong(ctReq.getSoLuong());
-            ct.setPhieuMuaHang(pmh);
 
-            sp.setTonKho(sp.getTonKho() + ctReq.getSoLuong());
-
-            int thanhTien = sp.getDonGia() * ct.getSoLuong();
+            int thanhTien = sp.getDonGia() * ctReq.getSoLuong();
             ct.setThanhTien(thanhTien);
             tongTien += thanhTien;
 
+            ct.setPhieuMuaHang(pmh);
             ct.setId(new CTPhieuMuaHangId(sp.getMaSanPham(), pmh.getSoPhieuMH()));
 
-            ctList.add(ct);
+            pmh.getChiTiet().add(ct);
         }
-        pmh.setChiTiet(ctList);
+
         pmh.setTongTien(tongTien);
 
-        repo.save(pmh);
+        pmh = repo.save(pmh);
 
         return PhieuMuaHangMapper.toDto(pmh);
     }

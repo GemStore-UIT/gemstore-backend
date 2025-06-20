@@ -11,6 +11,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "CT_PHIEUBANHANG")
@@ -34,6 +35,7 @@ public class CTPhieuBanHang {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JsonBackReference
+    @ToString.Exclude
     @JoinColumn(name = "sophieubh", referencedColumnName = "sophieubh")
     @NotNull(message = "Số phiếu bán hàng không được để trống")
     private PhieuBanHang phieuBanHang;
