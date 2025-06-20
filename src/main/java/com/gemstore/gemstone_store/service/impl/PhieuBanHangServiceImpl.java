@@ -70,42 +70,60 @@ public class PhieuBanHangServiceImpl implements PhieuBanHangService {
     @Override
     @Transactional
     public PhieuBanHangResponse saveWithCT(PhieuBanHangRequest req) {
-        PhieuBanHang pbh = new PhieuBanHang();
-        pbh.setKhachHang(req.getKhachHang());
-        pbh.setNgayLap(LocalDateTime.now());
+        PhieuBanHang pbh;
+        boolean isUpdate = req.getSoPhieuBH() != null && repo.existsById(req.getSoPhieuBH());
 
-        pbh = repo.save(pbh);
+        if (isUpdate) {
+            pbh = repo.findById(req.getSoPhieuBH())
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy phiếu bán hàng để cập nhật"));
 
-        List<CTPhieuBanHang> chiTietList = new ArrayList<>();
+            pbh.setNgayLap(LocalDateTime.now());
+            pbh.setKhachHang(req.getKhachHang());
+
+            pbh.getChiTiet().clear();
+        } else {
+            pbh = new PhieuBanHang();
+            pbh.setNgayLap(LocalDateTime.now());
+            pbh.setKhachHang(req.getKhachHang());
+            pbh.setChiTiet(new ArrayList<>());
+
+            pbh = repo.save(pbh);
+        }
+
         int tongTien = 0;
-        for (CTPhieuBanHangRequest ctReq : req.getChiTiet()) {
-            CTPhieuBanHang ct = new CTPhieuBanHang();
 
+        for (CTPhieuBanHangRequest ctReq : req.getChiTiet()) {
             SanPham sp = spRepo.findById(ctReq.getMaSanPham())
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm: " + ctReq.getMaSanPham()));
 
+            if (sp.getTonKho() < ctReq.getSoLuong()) {
+                throw new IllegalArgumentException("Không đủ tồn kho cho sản phẩm: " + sp.getTenSanPham());
+            }
+
+            CTPhieuBanHang ct = new CTPhieuBanHang();
             ct.setSanPham(sp);
             ct.setSoLuong(ctReq.getSoLuong());
             ct.setPhieuBanHang(pbh);
 
-            sp.setTonKho(sp.getTonKho() - ctReq.getSoLuong());
-
-            int thanhTien = (int)(sp.getDonGia() * ct.getSoLuong() * (1 + sp.getLoaiSanPham().getLoiNhuan() / 100.0));
+            double tyLeLN = sp.getLoaiSanPham().getLoiNhuan() / 100.0;
+            int thanhTien = (int) (sp.getDonGia() * ct.getSoLuong() * (1 + tyLeLN));
             ct.setThanhTien(thanhTien);
             tongTien += thanhTien;
 
-            CTPhieuBanHangId id = new CTPhieuBanHangId(sp.getMaSanPham(), pbh.getSoPhieuBH());
-            ct.setId(id);
+            sp.setTonKho(sp.getTonKho() - ct.getSoLuong());
 
-            chiTietList.add(ct);
+            ct.setId(new CTPhieuBanHangId(sp.getMaSanPham(), pbh.getSoPhieuBH()));
+
+            pbh.getChiTiet().add(ct);
         }
-        pbh.setChiTiet(chiTietList);
+
         pbh.setTongTien(tongTien);
 
-        repo.save(pbh);
+        pbh = repo.save(pbh);
 
         return PhieuBanHangMapper.toDto(pbh);
     }
+
 
 
     @Override

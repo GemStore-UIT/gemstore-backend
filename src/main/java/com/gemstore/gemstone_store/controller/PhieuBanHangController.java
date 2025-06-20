@@ -64,7 +64,7 @@ public class PhieuBanHangController {
     }
 
     @PostMapping("/full")
-    @Operation(summary = "Tạo phiếu bán hàng cùng chi tiết")
+    @Operation(summary = "Tạo hoặc cập nhật phiếu bán hàng cùng chi tiết")
     public ResponseEntity<?> createWithCT(@Valid @RequestBody PhieuBanHangRequest req) {
         PhieuBanHangResponse saved = service.saveWithCT(req);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
