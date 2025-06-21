@@ -94,6 +94,13 @@ public class CTPhieuMuaHangServiceImpl implements CTPhieuMuaHangService {
     @Override
     public void delete(CTPhieuMuaHangId id) {
         log.info("Xóa chi tiết phiếu mua hàng với id={}", id);
+        CTPhieuMuaHang ct = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy chi tiết"));
+        SanPham sanPham = ct.getSanPham();
+        if(sanPham != null) {
+            sanPham.setTonKho(sanPham.getTonKho() - ct.getSoLuong());
+            spRepo.save(sanPham);
+        }
         repo.deleteById(id);
         log.info("Xóa thành công chi tiết phiếu mua hàng với id={}", id);
     }

@@ -2,6 +2,7 @@ package com.gemstore.gemstone_store.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,5 +31,6 @@ public class NhaCungCap {
 
     @Column(name = "sdt", length = 20)
     @NotBlank(message = "SDT nhà cung cấp không được để trống")
+    @Pattern(regexp = "^\\d{10,15}", message = "Số điện thoại phải là chữ số, từ 10 đến 15 số")
     private String sdt;
 }

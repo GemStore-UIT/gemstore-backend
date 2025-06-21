@@ -36,6 +36,5 @@ public class SanPham {
     private Integer donGia;
 
     @Column(name = "tonkho")
-    @Min(value = 0, message = "Số lượng tồn kho phải lớn hơn hoặc bằng 0")
     private Integer tonKho;
 }

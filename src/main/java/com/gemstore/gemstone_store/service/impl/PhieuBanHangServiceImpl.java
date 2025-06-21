@@ -134,6 +134,16 @@ public class PhieuBanHangServiceImpl implements PhieuBanHangService {
     @Override
     public void delete(UUID id) {
         log.info("Xóa phiếu bán hàng với id={}", id);
+
+        List<CTPhieuBanHang> cts = ctRepo.findByPhieuBanHang_SoPhieuBH(id);
+        for(CTPhieuBanHang ct : cts){
+            SanPham sanPham = ct.getSanPham();
+            if(sanPham != null) {
+                sanPham.setTonKho(sanPham.getTonKho() + ct.getSoLuong());
+                spRepo.save(sanPham);
+            }
+        }
+
         repo.deleteById(id);
         log.info("Xóa thành công phiếu bán hàng với id={}", id);
     }
