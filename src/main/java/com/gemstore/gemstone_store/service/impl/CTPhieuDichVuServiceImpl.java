@@ -104,7 +104,14 @@ public class CTPhieuDichVuServiceImpl implements CTPhieuDichVuService {
 
         if (ctReq.getSoLuong() != null) ct.setSoLuong(ctReq.getSoLuong());
         if (ctReq.getTraTruoc() != null) ct.setTraTruoc(ctReq.getTraTruoc());
+
         if (ctReq.getNgayGiao() != null) ct.setNgayGiao(ctReq.getNgayGiao());
+        if (ct.getNgayGiao() != null && pdv.getNgayLap() != null) {
+            if (ct.getNgayGiao().isBefore(pdv.getNgayLap())) {
+                throw new IllegalArgumentException("Ngày giao không được nhỏ hơn ngày lập phiếu dịch vụ!");
+            }
+        }
+
         if (ctReq.getTinhTrang() != null) ct.setTinhTrang(ctReq.getTinhTrang());
 
         if (ct.getSoLuong() == null) throw new IllegalArgumentException("Thiếu số lượng");
