@@ -18,10 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -70,6 +67,15 @@ public class PhieuBanHangServiceImpl implements PhieuBanHangService {
     @Override
     @Transactional
     public PhieuBanHangResponse saveWithCT(PhieuBanHangRequest req) {
+        Set<UUID> uniqueSPs = new HashSet<>();
+        for (CTPhieuBanHangRequest ct : req.getChiTiet()) {
+            if (!uniqueSPs.add(ct.getMaSanPham())) {
+                throw new IllegalArgumentException(
+                        "Không được nhập trùng sản phẩm trong cùng một phiếu (mã: " + ct.getMaSanPham() + ")"
+                );
+            }
+        }
+
         PhieuBanHang pbh;
         boolean isUpdate = req.getSoPhieuBH() != null && repo.existsById(req.getSoPhieuBH());
 

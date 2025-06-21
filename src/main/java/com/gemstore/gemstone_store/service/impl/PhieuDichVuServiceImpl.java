@@ -19,10 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -74,6 +71,15 @@ public class PhieuDichVuServiceImpl implements PhieuDichVuService {
     @Override
     @Transactional
     public PhieuDichVuResponse saveWithCT(PhieuDichVuRequest req) {
+        Set<UUID> uniqueLDVs = new HashSet<>();
+        for (CTPhieuDichVuRequest ct : req.getChiTiet()) {
+            if (!uniqueLDVs.add(ct.getMaLDV())) {
+                throw new IllegalArgumentException(
+                        "Không được nhập trùng loại dịch vụ trong cùng một phiếu (mã: " + ct.getMaLDV() + ")"
+                );
+            }
+        }
+
         PhieuDichVu pdv;
         boolean isUpdate = req.getSoPhieuDV() != null && repo.existsById(req.getSoPhieuDV());
 
@@ -127,9 +133,20 @@ public class PhieuDichVuServiceImpl implements PhieuDichVuService {
             ct.setThanhTien(thanhTien);
             ct.setTraTruoc(traTruoc);
             ct.setConLai(thanhTien - traTruoc);
+
+            if (ctReq.getNgayGiao() == null) {
+                throw new IllegalArgumentException("Ngày giao không được để trống!");
+            }
+
             if(ctReq.getNgayGiao().isAfter(pdv.getNgayLap().plusDays(ngayGiaoToiDa))){
                 throw new IllegalArgumentException("Ngày giao không được vượt quá " + ngayGiaoToiDa + " ngày kể từ ngày lập phiếu.");
-            } else ct.setNgayGiao(ctReq.getNgayGiao());
+            }
+
+            if (ctReq.getNgayGiao().isBefore(pdv.getNgayLap())) {
+                throw new IllegalArgumentException("Ngày giao không được nhỏ hơn ngày lập phiếu dịch vụ!");
+            }
+            ct.setNgayGiao(ctReq.getNgayGiao());
+
             ct.setTinhTrang(ctReq.getTinhTrang());
             ct.setPhieuDichVu(pdv);
             ct.setId(new CTPhieuDichVuId(pdv.getSoPhieuDV(), ldv.getMaLDV()));
