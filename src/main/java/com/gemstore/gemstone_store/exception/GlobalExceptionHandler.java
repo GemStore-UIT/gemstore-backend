@@ -48,6 +48,19 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body("Lỗi dữ liệu: " + ex.getRootCause().getMessage());
     }
 
+    // Xử lý lỗi người dùng nhập dữ liệu không hợp lệ
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handleIllegalArgument(IllegalArgumentException ex) {
+        log.warn("Lỗi nhập liệu: {}", ex.getMessage());
+
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("status", 400);
+        response.put("message", ex.getMessage());
+        response.put("timestamp", System.currentTimeMillis());
+
+        return ResponseEntity.badRequest().body(response);
+    }
+
     // Xử lý tất cả các lỗi khác
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleAll(Exception ex) {
