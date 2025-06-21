@@ -3,6 +3,7 @@ package com.gemstore.gemstone_store.service.impl;
 import com.gemstore.gemstone_store.model.SanPham;
 import com.gemstore.gemstone_store.repository.SanPhamRepository;
 import com.gemstore.gemstone_store.service.SanPhamService;
+import com.gemstore.gemstone_store.service.ThamSoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,9 @@ public class SanPhamServiceImpl implements SanPhamService {
 
     @Autowired
     private SanPhamRepository repo;
+
+    @Autowired
+    private ThamSoService thamSoService;
 
     @Override
     public List<SanPham> getAll() {
@@ -39,6 +43,9 @@ public class SanPhamServiceImpl implements SanPhamService {
     @Override
     public SanPham save(SanPham sp) {
         log.info("Lưu sản phẩm mới/cập nhật: {}", sp);
+        int toiThieu = thamSoService.getByName("SoLuongTonToiThieu").get().getGiaTri();
+        if(sp.getTonKho() < toiThieu)
+            throw new IllegalArgumentException("Số lượng tồn kho phải lớn hơn hoặc bằng: " + toiThieu);
         SanPham saved = repo.save(sp);
         log.info("Lưu thành công sản phẩm với id={}", saved.getMaSanPham());
         return saved;

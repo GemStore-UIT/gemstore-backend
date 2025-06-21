@@ -12,6 +12,7 @@ import com.gemstore.gemstone_store.repository.CTPhieuDichVuRepository;
 import com.gemstore.gemstone_store.repository.LoaiDichVuRepository;
 import com.gemstore.gemstone_store.repository.PhieuDichVuRepository;
 import com.gemstore.gemstone_store.service.PhieuDichVuService;
+import com.gemstore.gemstone_store.service.ThamSoService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ public class PhieuDichVuServiceImpl implements PhieuDichVuService {
     private CTPhieuDichVuRepository ctRepo;
     @Autowired
     private LoaiDichVuRepository ldvRepo;
+
+    @Autowired
+    private ThamSoService thamSoService;
 
     @Override
     public List<PhieuDichVuResponse> getAll() {
@@ -115,13 +119,17 @@ public class PhieuDichVuServiceImpl implements PhieuDichVuService {
             }
 
             CTPhieuDichVu ct = new CTPhieuDichVu();
+            int ngayGiaoToiDa = thamSoService.getByName("SoNgayGiaoToiDa").get().getGiaTri();
+
             ct.setLoaiDichVu(ldv);
             ct.setDonGia(donGia);
             ct.setSoLuong(soLuong);
             ct.setThanhTien(thanhTien);
             ct.setTraTruoc(traTruoc);
             ct.setConLai(thanhTien - traTruoc);
-            ct.setNgayGiao(ctReq.getNgayGiao());
+            if(ctReq.getNgayGiao().isAfter(pdv.getNgayLap().plusDays(ngayGiaoToiDa))){
+                throw new IllegalArgumentException("Ngày giao không được vượt quá " + ngayGiaoToiDa + " ngày kể từ ngày lập phiếu.");
+            } else ct.setNgayGiao(ctReq.getNgayGiao());
             ct.setTinhTrang(ctReq.getTinhTrang());
             ct.setPhieuDichVu(pdv);
             ct.setId(new CTPhieuDichVuId(pdv.getSoPhieuDV(), ldv.getMaLDV()));
