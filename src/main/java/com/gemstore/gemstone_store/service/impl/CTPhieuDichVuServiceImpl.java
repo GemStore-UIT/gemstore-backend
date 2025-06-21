@@ -73,6 +73,7 @@ public class CTPhieuDichVuServiceImpl implements CTPhieuDichVuService {
     @Override
     @Transactional
     public CTPhieuDichVuResponse save(CTPhieuDichVuRequest ctReq) {
+
         log.info("Lưu/Update chi tiết phiếu dịch vụ: {}", ctReq);
         UUID soPhieuDV = ctReq.getSoPhieuDV();
         UUID maLDV = ctReq.getMaLDV();
