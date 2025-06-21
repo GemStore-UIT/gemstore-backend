@@ -12,6 +12,7 @@ import com.gemstore.gemstone_store.repository.CTPhieuBanHangRepository;
 import com.gemstore.gemstone_store.repository.PhieuBanHangRepository;
 import com.gemstore.gemstone_store.repository.SanPhamRepository;
 import com.gemstore.gemstone_store.service.PhieuBanHangService;
+import com.gemstore.gemstone_store.service.SanPhamService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,8 @@ public class PhieuBanHangServiceImpl implements PhieuBanHangService {
     private CTPhieuBanHangRepository ctRepo;
     @Autowired
     private SanPhamRepository spRepo;
+    @Autowired
+    private SanPhamService sanPhamService;
 
     @Override
     public List<PhieuBanHangResponse> getAll() {
@@ -88,6 +91,7 @@ public class PhieuBanHangServiceImpl implements PhieuBanHangService {
             for(CTPhieuBanHang oldCT : pbh.getChiTiet()){
                 SanPham sanPham = oldCT.getSanPham();
                 if(sanPham != null) sanPham.setTonKho(sanPham.getTonKho() + oldCT.getSoLuong());
+                sanPhamService.save(sanPham);
             }
 
             pbh.getChiTiet().clear();
@@ -122,6 +126,7 @@ public class PhieuBanHangServiceImpl implements PhieuBanHangService {
             tongTien += thanhTien;
 
             sp.setTonKho(sp.getTonKho() - ct.getSoLuong());
+            sanPhamService.save(sp);
 
             ct.setId(new CTPhieuBanHangId(sp.getMaSanPham(), pbh.getSoPhieuBH()));
 

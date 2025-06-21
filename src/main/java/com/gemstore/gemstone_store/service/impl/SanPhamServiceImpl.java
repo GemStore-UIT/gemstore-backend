@@ -43,13 +43,24 @@ public class SanPhamServiceImpl implements SanPhamService {
     @Override
     public SanPham save(SanPham sp) {
         log.info("Lưu sản phẩm mới/cập nhật: {}", sp);
-        int toiThieu = thamSoService.getByName("SoLuongTonToiThieu").get().getGiaTri();
+        var optThamSo = thamSoService.getByName("SoLuongTonToiThieu");
+        if(optThamSo.isEmpty()) {
+            log.error("Không tìm thấy tham số 'SoLuongTonToiThieu' trong hệ thống!");
+            throw new IllegalArgumentException("Không tìm thấy tham số 'Số lượng tồn tối thiểu'");
+        }
+        int toiThieu = optThamSo.get().getGiaTri();
+        // Nếu field là Integer thì cần kiểm tra null
+        if (sp.getTonKho() == null) {
+            log.warn("Số lượng tồn kho không được null!");
+            throw new IllegalArgumentException("Số lượng tồn kho không được để trống");
+        }
         if(sp.getTonKho() < toiThieu)
             throw new IllegalArgumentException("Số lượng tồn kho phải lớn hơn hoặc bằng: " + toiThieu);
         SanPham saved = repo.save(sp);
         log.info("Lưu thành công sản phẩm với id={}", saved.getMaSanPham());
         return saved;
     }
+
 
     @Override
     public void delete(UUID id) {
