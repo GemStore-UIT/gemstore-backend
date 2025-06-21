@@ -3,6 +3,7 @@ package com.gemstore.gemstone_store.service.impl;
 import com.gemstore.gemstone_store.dto.response.CTPhieuBanHangResponse;
 import com.gemstore.gemstone_store.mapper.CTPhieuBanHangMapper;
 import com.gemstore.gemstone_store.model.CTPhieuBanHang;
+import com.gemstore.gemstone_store.model.CTPhieuMuaHang;
 import com.gemstore.gemstone_store.model.PhieuBanHang;
 import com.gemstore.gemstone_store.model.SanPham;
 import com.gemstore.gemstone_store.model.id.CTPhieuBanHangId;
@@ -95,6 +96,13 @@ public class CTPhieuBanHangServiceImpl implements CTPhieuBanHangService {
     @Override
     public void delete(CTPhieuBanHangId id) {
         log.info("Xóa chi tiết phiếu bán hàng với id={}", id);
+        CTPhieuBanHang ct = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy chi tiết"));
+        SanPham sanPham = ct.getSanPham();
+        if(sanPham != null) {
+            sanPham.setTonKho(sanPham.getTonKho() + ct.getSoLuong());
+            spRepo.save(sanPham);
+        }
         repo.deleteById(id);
         log.info("Xóa thành công chi tiết phiếu bán hàng với id={}", id);
     }

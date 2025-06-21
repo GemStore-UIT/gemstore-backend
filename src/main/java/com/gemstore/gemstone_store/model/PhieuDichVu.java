@@ -36,6 +36,7 @@ public class PhieuDichVu {
 
     @Column(name = "sdt", length = 20)
     @NotBlank(message = "SDT không được để trống")
+    @Pattern(regexp = "^\\d{10,15}", message = "Số điện thoại phải là chữ số, từ 10 đến 15 số")
     private String sdt;
 
     @Column(name = "tongtien")

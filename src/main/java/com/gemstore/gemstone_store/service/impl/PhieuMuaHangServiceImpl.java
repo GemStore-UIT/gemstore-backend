@@ -169,6 +169,16 @@ public class PhieuMuaHangServiceImpl implements PhieuMuaHangService {
     @Override
     public void delete(UUID id) {
         log.info("Xóa phiếu mua hàng với id={}", id);
+
+        List<CTPhieuMuaHang> cts = ctRepo.findByPhieuMuaHang_SoPhieuMH(id);
+        for(CTPhieuMuaHang ct : cts){
+            SanPham sanPham = ct.getSanPham();
+            if(sanPham != null) {
+                sanPham.setTonKho(sanPham.getTonKho() - ct.getSoLuong());
+                spRepo.save(sanPham);
+            }
+        }
+
         repo.deleteById(id);
         log.info("Xóa thành công phiếu mua hàng với id={}", id);
     }

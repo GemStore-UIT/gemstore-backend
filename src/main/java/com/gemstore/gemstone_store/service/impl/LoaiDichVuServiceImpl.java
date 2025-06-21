@@ -3,6 +3,7 @@ package com.gemstore.gemstone_store.service.impl;
 import com.gemstore.gemstone_store.model.LoaiDichVu;
 import com.gemstore.gemstone_store.repository.LoaiDichVuRepository;
 import com.gemstore.gemstone_store.service.LoaiDichVuService;
+import com.gemstore.gemstone_store.service.ThamSoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,9 @@ public class LoaiDichVuServiceImpl implements LoaiDichVuService {
 
     @Autowired
     private LoaiDichVuRepository repo;
+
+    @Autowired
+    private ThamSoService thamSoService;
 
     @Override
     public List<LoaiDichVu> getAll() {
